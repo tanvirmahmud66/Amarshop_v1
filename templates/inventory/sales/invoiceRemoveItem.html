@@ -1,0 +1,38 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+{%block title%} Remove Sales Item | Amar Shop{%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+    <div class="card height-100 d-flex justify-content-center align-items-center">
+        <div class="card border-danger shadow-lg width-50">
+            <div class="card-header fw-bold fs-4 text-center text-danger">Remove Invoice Item</div>
+            <div class="card-body">
+                <form method="post">
+                    {%csrf_token%}
+                    <div class="d-flex justify-content-center align-items-center mb-3">
+                        {%if invoiceItem.product.product.productImg%}
+                            <img src="{{invoiceItem.product.product.productImg.url}}" width="170" alt="product image"/>
+                        {%endif%}
+                    </div>
+                    <div class="text-center mb-2 fw-bold">{{invoiceItem.product}}</div>
+                    <div class="text-center mb-1">{{invoiceItem.product.product.brand}} - {{invoiceItem.product.product.category}}</div>
+                    <div class="text-center">Quantity: {{invoiceItem.quantity}}</div>
+                    <div class="mt-3 text-center">
+                        <a href="{%url 'invoice-list' invoiceItem.token%}" class="btn btn-sm btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock main%}
+
+

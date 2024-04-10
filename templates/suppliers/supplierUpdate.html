@@ -1,0 +1,36 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%} Update Supplier | Amar Shop{%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/suppliers.css'%}">
+{%endblock link%}
+
+
+<!-- main body -->
+{%block main%}
+<div class="supplier p-2">
+    
+    <div class="card height-100">
+        <div class="d-flex justify-content-center align-items-center height-100">
+            <div class="card">
+                <div class="card-header fs-4 text-center">Add New Supplier</div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {%csrf_token%}
+                        {{form.as_p}}
+                        <div class="width-100 mt-3 d-flex align-items-center">
+                            <a class="btn btn-outline-secondary" href="{%url 'supplier-list'%}">Cancel</a>
+                            <button class="btn btn-outline-success ms-2" type="submit">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{%endblock main%}

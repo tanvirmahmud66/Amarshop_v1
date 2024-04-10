@@ -1,0 +1,43 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%} Remove Product | Amar Shop {%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+
+    <div class="card height-100 d-flex justify-content-center align-items-center p-5">
+        
+        <div class="card width-50 border border-danger shadow-lg bg-body-tertiary rounded">
+            <div class="card-header fs-5 fw-bolder text-center text-danger">Are you sure to delete Product ?</div>
+            <div class="card-body">
+                <form method="post" accept="">
+                    {% csrf_token %}
+                    {%if product.productImg%}
+                    <div class="d-flex justify-content-center align-items-center">
+                        <img src="{{product.productImg.url}}" height="350px" alt=""/>
+                    </div>
+                    {%endif%}
+                    <div class="fs-4 fw-bold text-center">{{product.model}} <a class="fs-6 alert alert-info p-1 m-0">{{product.brand}}</a></div>
+                    <div class="fs-6 text-center">Released year: {{product.released_year}}</div>
+                    <div class="d-flex justify-content-center align-items-center mt-3">
+                        <a href="{%url 'product-details' product.id%}" class="btn btn-sm btn-secondary">
+                            Cancel
+                        </a> 
+                        <button type="submit" class="ms-2 btn btn-sm btn-outline-danger">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+
+</div>
+{%endblock main%}

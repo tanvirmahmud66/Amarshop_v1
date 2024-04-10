@@ -1,0 +1,126 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+{%block title%} Sales List | Amar Shop{%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+    <div class="card height-100">
+        <div class="card-header d-flex justify-content-between align-items-center position-relative">
+            <a href="{%url 'sales-list'%}" class="btn-back">
+                <img src="{%static 'icons/inventory/back.png'%}" width="20" alt=""/>
+            </a>
+            <div class="fw-bold fs-5 position-absolute top-50 start-50 translate-middle">Sale Details</div>
+        </div>
+        <div class="card-body overflow-scroll">
+            <div class="row">
+                <div class="col-5">
+                    <div class="card sticky-top">
+                        <div class="card-header fw-bold text-success text-center">Sale Information</div>
+                        <div class="card-body p-0">
+                            <table class="m-0 table table-bordered border-secondary">
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-bold">Customer Name</td>
+                                        <td class="text-end">
+                                            {%if sale.user%}
+                                            {{sale.user.first_name}} {{sale.user.last_name}}
+                                            {%else%}
+                                            {{sale.general_user.first_name}} {{sale.general_user.last_name}}
+                                            {%endif%}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Email</td>
+                                        <td class="text-end">
+                                            {%if sale.user%}
+                                            {{sale.user.email}}
+                                            {%else%}
+                                            {{sale.general_user.email}}
+                                            {%endif%}
+                                        </td>
+                                    </tr>
+                                    {%if sale.general_user%}
+                                    <tr>
+                                        <td class="fw-bold">Phone</td>
+                                        <td class="text-end">{{sale.general_user.phone}}</td>
+                                    </tr>
+                                    {%endif%}
+                                    <tr>
+                                        <td class="fw-bold">Product Quantity</td>
+                                        <td class="text-end">{{sale.product_quantity}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Date & Time</td>
+                                        <td class="text-end text-primary">{{sale.sales_date}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Transaction Type</td>
+                                        <td class="text-end">{{transaction.transaction_type}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Payment Method</td>
+                                        <td class="text-end">{{transaction.payment_method}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Grand Total</td>
+                                        <td class="text-end text-success">{{grand_total}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Paid Amount</td>
+                                        <td class="text-end fw-bold text-success">{{transaction.amount}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <table class="table border">
+                        <thead class="sticky-top table-secondary">
+                            <tr>
+                                <th scope="col" class="align-middle">Product</th>
+                                <th scope="col" class="text-center align-middle">Picture</th>
+                                <th scope="col" class="text-center align-middle">Price</th>
+                                <th scope="col" class="text-center align-middle">Quantity</th>
+                                <th scope="col" class="text-center align-middle">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody class="">
+                            {%for each in invoice_list%}
+                            <tr>
+                                <td class="align-middle">{{each.product.product.model}}</td>
+                                <td class="text-center align-middle">
+                                    <div class="overflow-hidden d-flex justify-content-center align-items-center">
+                                        {%if each.product.product.productImg %}
+                                        <img src="{{ each.product.product.productImg.url }}" alt="Product Image" width="60">
+                                        {%else%}
+                                        <img src="{% static 'media/default_images/default_product_image.png' %}" alt="{{ product.model }}">
+                                        {%endif%}
+                                    </div>
+                                </td>
+                                <td class="text-center align-middle">{{each.product.unit_price}}</td>
+                                <td class="text-center align-middle">{{each.quantity}}</td>
+                                <td class="text-center align-middle text-success">{{each.subtotal}}</td>
+                            </tr>
+                            {%endfor%}
+                            <tr>
+                                <td class="align-middle fw-bold">Grand Total</td>
+                                <td class="text-center align-middle"></td>
+                                <td class="text-center align-middle"></td>
+                                <td class="text-center align-middle "></td>
+                                <td class="text-center align-middle fw-bold text-success">{{grand_total}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock main%}

@@ -1,0 +1,47 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%} All Brand | Amar Shop {%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+
+    <div class="card height-100">
+        <div class="sticky-top bg-white">
+            <div class="card-header d-flex justify-content-end align-items-center position-relative">
+                <div class="fs-5 fw-bold text-center position-absolute top-50 start-50 translate-middle"">Brands</div>
+                <a href="{%url 'create-brand'%}" class="btn btn-success btn-sm">Add brand</a>
+            </div>
+            <div class="card-header">
+                <div>
+                    <form method="get" action="{%url 'brand-list'%}" class="d-flex">
+                        <input class="form-control" type="text" name="q" placeholder="search brand...">
+                        <button class="btn btn-sm btn-outline-secondary" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card-body overflow-scroll">
+            <ul class="list-group ">
+                {%for brand in brands%}
+                <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div class="fw-bold">{{brand}}</div>
+                    <div>
+                        <a href="{%url 'brand-update' brand.id %}" class="btn btn-sm btn-outline-success">Update</a>
+                        <a href="{%url 'brand-delete' brand.id %}" class="btn btn-sm btn-danger">Remove</a>
+                    </div>
+                </li>
+                {%endfor%}
+            </ul>
+        </div>
+    </div>
+
+</div>
+{%endblock main%}

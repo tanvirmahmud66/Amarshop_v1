@@ -1,0 +1,74 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%} Set Product Price | Amar Shop {%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+    <div class="card height-100 p-5">
+        <div class="d-flex align-items-center">
+            <a href="{%url 'inventory-list'%}" class="btn-back">
+                <img src="{%static 'icons/inventory/back.gif'%}" width="25" alt=""/>
+            </a>
+            <div class="ms-4 fw-bolder">Set Product Price</div>
+        </div>
+
+        <div class="row height-100">
+            <div class="mt-4 col">
+                <div class="fs-2 fw-bold">{{inventory.product.model}}</div>
+                <div class="mt-4 row">
+                    <div class="col">Brand: <span class="alert alert-info p-1 m-0">{{inventory.product.brand}}</span> </div>
+                    <div class="col">Category: <span class="alert alert-info p-1 m-0">{{inventory.product.category}}</span></div>
+                </div>
+                <div class="mt-4 row">
+                    <div class="col">Stock: 
+                        {%if inventory.quantity < 5 and inventory.quantity > 0 %}
+                            <span class="alert alert-warning p-1 m-0">Running out</span>
+                        {%elif inventory.quantity == 0%}
+                            <span class="alert alert-danger p-1 m-0">Out of stock</span>
+                        {%else%}
+                            <span class="alert alert-success p-1 m-0">Available</span>
+                        {%endif%} 
+                    </div>
+                    <div class="col">Quantity: <span class="alert alert-success fw-bold p-1 m-0">{{inventory.quantity}} piece</span></div> 
+                </div>
+                <div class="mt-4 row">
+                    <div class="cor">Unit Cost: <span class="border border-danger p-2 rounded">{{inventory.unit_cost}}</span></div>
+                </div>
+
+                <div class="card mt-5">
+                    <div class="card-header fw-bold text-center text-success">Set Product Price</div>
+                    <div class="card-body">
+                        <form method="post">
+                            {%csrf_token%}
+                            <div class="mb-3">
+                                {{ form.unit_price }}
+                                <div class="text-danger mt-1">
+                                    {{ form.quantity.errors }}
+                                </div>
+                            </div>
+                            <a href="{%url 'inventory-list'%}" class="btn btn-sm btn-outline-secondary">Cancel</a>
+                            <button class="btn btn-sm btn-success">Save</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="mt-4 col overflow-hidden d-flex justify-content-center align-items-center">
+                {%if inventory.product.productImg %}
+                <img src="{{ inventory.product.productImg.url }}" alt="Product Image" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
+                {%else%}
+                <img src="{% static 'media/default_images/default_product_image.png' %}" alt="{{ product.model }}">
+                {%endif%}
+            </div>
+        </div>
+   </div>
+</div>
+{%endblock main%}

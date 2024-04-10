@@ -1,0 +1,64 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+{%block title%} Change Profile Picture | Amar Shop{%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+
+<!-- main body -->
+{%block main%}
+
+    <div class="card height-100 d-flex justify-content-center align-items-center">
+        <div class="">
+            <div class="mb-3 text-center fw-bold">Change Profile Picture</div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="custom-file-container">
+                    <label for="id_profile_pic" class="custom-file-label" id="image-label">
+                        <div class="inner-text" id="inner-text" style="display: block;">File Upload</div>
+                        <img src="#" alt="Image Preview" class="img-thumbnail" id="preview" style="display: none;">
+                    </label>
+                    <input type="file" name="profile_pic" id="id_profile_pic" class="custom-file-input">
+                </div>
+                <div class="mt-3 text-center">
+                    <a href="{%url 'profile' request.user.id%}" class="btn btn-sm btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-sm btn-success">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.querySelector('.custom-file-input');
+            const fileLabel = document.querySelector('.inner-text');
+            const imagePreview = document.getElementById('preview');
+            const imageLabel = document.getElementById('image-label');
+
+            fileInput.addEventListener('change', function() {
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    fileLabel.style.display = 'none';
+                    // Display image preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.style.display = 'block';
+                        imagePreview.src = e.target.result;
+                    }
+                    reader.onerror = function(e) {
+                        console.error('FileReader error:', e.target.error);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    fileLabel.textContent = 'Upload Image';
+                    imagePreview.src = '#';
+                    imagePreview.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+{%endblock main%}

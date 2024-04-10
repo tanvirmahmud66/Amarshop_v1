@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {%block title%}Home | Amar Shop{%endblock title%}
+    </title>
+
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {%block link%}{%endblock link%}
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <link rel="stylesheet" href="{% static 'css/layout.css'%}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js" integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+
+<body>
+
+    <div class="mother-div">
+        <div class="sidebar">
+            <div class="upper">
+                <div class="branding">
+                    <a href="{%url 'dashboard'%}">
+                        <span class="gedget">Amar</span> Shop
+                    </a>
+                </div>
+                </a>
+                <ul class="navList">
+                    <li class="navItem">
+                        <a href="{%url 'dashboard'%}">
+                            <img src="{%static 'icons/nav/home.png'%}" width="25" alt="Dashboard"/>
+                            <div class="navtitle">Dashboard</div>
+                        </a>
+                    </li>
+                    <li class="navItem">
+                        <a href="{%url 'inventory-list'%}" >
+                            <img src="{%static 'icons/nav/inventory.png'%}" width="25" alt="Inventory"/>    
+                            <div class="navtitle">Inventory</div>
+                        </a>
+                    </li>
+                    <li class="navItem">
+                        <a href="{%url 'sales-list'%}" >
+                            <img src="{%static 'icons/nav/sales.png'%}" width="25" alt="Inventory"/>    
+                            <div class="navtitle">Sales</div>
+                        </a>
+                    </li>
+                    <li class="navItem">
+                        <a href="{%url 'purchase-list'%}" >
+                            <img src="{%static 'icons/nav/purchase.png'%}" width="25" alt="Inventory"/>    
+                            <div class="navtitle">Purchase</div>
+                        </a>
+                    </li>
+                    <li class="navItem">
+                        <a href="{%url 'product-list'%}">
+                            <img src="{%static 'icons/nav/product.png'%}" width="25" alt="Orders"/>    
+                            <div class="navtitle">Product</div>
+                        </a>
+                    </li>
+                    <li class="navItem">
+                        <a href="{%url 'supplier-list'%}">
+                            <img src="{%static 'icons/nav/suppliers.png'%}" width="25" alt="Suppliers"/>
+                            <div class="navtitle">Suppliers</div>
+                        </a>
+                    </li>
+                    <li class="navItem">
+                        <a href="{%url 'reports'%}">
+                            <img src="{%static 'icons/nav/reports.png'%}" width="25" alt="Reports"/>
+                            <div class="navtitle">Reports</div>
+                        </a>
+                    </li>
+                    
+                    <li class="navItem">
+                        <a href="{%url 'orders'%}">
+                            <img src="{%static 'icons/nav/orders.png'%}" width="25" alt="Orders"/>    
+                            <div class="navtitle">Orders</div>
+                        </a>
+                    </li>
+                    <li class="navItem">
+                        <a href="{%url 'category-list'%}">
+                            <img src="{%static 'icons/nav/category.png'%}" width="25" alt="Orders"/>    
+                            <div class="navtitle">Categories</div>
+                        </a>
+                    </li>
+                    <li class="navItem">
+                        <a href="{%url 'brand-list'%}">
+                            <img src="{%static 'icons/nav/brand.png'%}" width="25" alt="Orders"/>    
+                            <div class="navtitle">Brand</div>
+                        </a>
+                    </li>
+                    <li class="navItem">
+                        <a href="{%url 'manage'%}">
+                            <img src="{%static 'icons/nav/manage.png'%}" width="25" alt="Manage_Store"/>        
+                            <div class="navtitle">Manage Store</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="lower">
+                <ul class="navList">
+                    <!-- <li class="navItem">
+                        <a href="#">
+                            <img src="{%static 'icons/nav/settings.png'%}" width="23" alt="Settings"/>
+                            <div class="navtitle">Settings</div>
+                        </a>
+                    </li> -->
+                    <li class="navItem">
+                        <a href="{%url 'admin-logout'%}">
+                            <img src="{%static 'icons/nav/logout.png'%}" width="25" alt="Logout"/>    
+                            <div class="navtitle">Log Out</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="content">
+            <nav class="navbar navbar-light navbar-w bg-white p-0">
+                <div class="container-fluid">
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                    </form>
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="text-end text-black me-1">
+                                <div class="fw-bold">{{request.user.first_name}} {{request.user.last_name}}</div>
+                                <div class="text-primary">Admin</div>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="{%url 'profile' request.user.id%}">
+                                <img src="{% static 'icons/nav/profile.png'%}" width="23" alt="Profile"/>
+                                Profile
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <img src="{% static 'icons/nav/settings.png'%}" width="23" alt="Settings"/>
+                                Settings
+                            </a>
+                            <li><hr class="dropdown-divider"></li>
+                            <a class="dropdown-item" href="{%url 'admin-logout'%}">
+                                <img src="{% static 'icons/nav/logout.png'%}" width="25" alt="Logout"/>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="main-content">
+                {%block main%}
+
+                {%endblock main%}
+            </div>
+            {%block script%}
+            {%endblock script%}
+            <script type="text/javascript" src="{%static 'js/layout.js'%}"></script>
+        </div>
+    </div>
+
+    
+    
+</body>
+</html>

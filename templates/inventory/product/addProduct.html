@@ -1,0 +1,97 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%} Add New Product | Amar Shop {%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+    <div class="card height-100 p-5">
+
+        <div class="card shadow-lg bg-body-tertiary rounded">
+            <div class="card-header text-center fs-4">Add New Product</div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {%csrf_token%}
+
+                    <!-- {{form.as_p}} -->
+                    <div class="col mb-3">
+                        <label for="{{ form.model_for_label }}" class="form-label">Model Name:</label>
+                        {{ form.model }}
+                        <div class="text-danger mt-1">
+                            {{ form.model.errors }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="{{ form.brand_for_label }}" class="form-label">Brand:</label>
+                            {{ form.brand }}
+                            <div class="text-danger mt-1">
+                                {{ form.brand.errors }}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="{{ form.category_for_label }}" class="form-label">Category:</label>
+                            {{ form.category }}
+                            <div class="text-danger mt-1">
+                                {{ form.category.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="{{ form.price_for_label }}" class="form-label">Price:</label>
+                            {{ form.price }}
+                            <div class="text-danger mt-1">
+                                {{ form.price.errors }}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="{{ form.cost_for_label }}" class="form-label">Cost:</label>
+                            {{ form.cost }}
+                            <div class="text-danger mt-1">
+                                {{ form.cost.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="{{ form.released_year_for_label }}" class="form-label">Released year:</label>
+                            <div class="d-flex">
+                                {{ form.released_year }}
+                            </div>
+                            <div class="text-danger mt-1">
+                                {{ form.released_year.errors }}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="{{ form.productImg_for_label }}" class="form-label">Image:</label>
+                            {{ form.productImg }}
+                            <div class="text-danger mt-1">
+                                {{ form.productImg.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-3">
+                        <label for="{{ form.description_for_label }}" class="form-label">Model Name:</label>
+                        {{ form.description }}
+                        <div class="text-danger mt-1">
+                            {{ form.description.errors }}
+                        </div>
+                    </div>
+                    <a href="{% url 'product-list' %}" class="btn btn-sm btn-secondary">Cancel</a>
+                    <button class="ms-2 btn btn-sm btn-outline-success" type="submit">Create</button>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{%endblock main%}

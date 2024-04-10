@@ -1,0 +1,120 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%} Update Purchase | Amar Shop {%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+
+    <div class="card height-100 d-flex justify-content-center align-items-center p-5">
+        
+            
+
+        <div class="card bordered border-success shadow-lg bg-body-tertiary rounded">
+            <div class="card-header fs-5 fw-bolder text-center">Update Purchase</div>
+            <div class="card-body">
+                <form method="post" accept="">
+                    {% csrf_token %}
+                    <div class="row mb-2">
+                        <div class="col">
+                            <div class="">
+                                <label for="{{ form.category_for_label }}" class="form-label">Category:</label>
+                                {{ form.category }}
+                                <div class="text-danger mt-1">
+                                    {{ form.category.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="">
+                                <label for="{{ form.brand_for_label }}" class="form-label">Brand:</label>
+                                {{ form.brand }}
+                                <div class="text-danger mt-1">
+                                    {{ form.brand.errors }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col">
+                            <div class="">
+                                <label for="{{ form.model_for_label }}" class="form-label">Model:</label>
+                                {{ form.model }}
+                                <div class="text-danger mt-1">
+                                    {{ form.category.errors }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col">
+                            <div class="">
+                                <label for="{{ form.quantity_for_label }}" class="form-label">Quantity:</label>
+                                {{ form.quantity }}
+                                <div class="text-danger mt-1">
+                                    {{ form.quantity.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="">
+                                <label for="{{ form.unit_cost_for_label }}" class="form-label">Unit Price:</label>
+                                {{ form.unit_cost }}
+                                <div class="text-danger mt-1">
+                                    {{ form.unit_cost.errors }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+                    <hr/>
+                    <div class="col mb-3">
+                        <div class="">
+                            <label for="{{ form.supplier_for_label }}" class="form-label">Supplier:</label>
+                            {{ form.supplier }}
+                            <div class="text-danger mt-1">
+                                {{ form.supplier.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <div class="">
+                                <label for="{{ form.payment_method_for_label }}" class="form-label">Payment Method:</label>
+                                {{ form.payment_method }}
+                                <div class="text-danger mt-1">
+                                    {{ form.payment_method.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col mb-3">
+                            <div class="">
+                                <label for="{{ form.paid_ammount_for_label }}" class="form-label">Transaction Amount:</label>
+                                {{ form.paid_ammount }}
+                                <div class="text-danger mt-1">
+                                    {{ form.paid_ammount.errors }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- {{ form.as_p }} -->
+                    <div class="d-flex">
+                        <a href="{%url 'purchase-details' purchase.id%}" class="btn btn-sm btn-secondary">
+                            Cancel
+                        </a> 
+                        <button type="submit" class="ms-2 btn btn-sm btn-outline-success">Update</button>
+                    </div>
+                </form>                
+            </div>
+        </div>
+        
+    </div>
+
+</div>
+{%endblock main%}

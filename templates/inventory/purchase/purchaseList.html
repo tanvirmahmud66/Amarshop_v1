@@ -1,0 +1,99 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%} Purchase List | Amar Shop {%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+
+    <div class="card height-100">
+        <div class="card-header d-flex justify-content-end align-items-center position-relative">
+            <div class="fs-4 fw-bold position-absolute top-50 start-50 translate-middle">Purchase List</div>
+            <a href="{%url 'new-purchase'%}" class="btn btn-success btn-sm">New Purchase</a>
+        </div>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <form method="get" action="{%url 'purchase-list'%}" class="d-flex">
+                    <input class="form-control" type="text" name="q" placeholder="search product...">
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">Search</button>
+                </form>
+            </div> 
+                   
+            <form method="get" action="{%url 'purchase-list'%}" class="ms-2 d-flex">
+                <div class="input-group">
+                    <input type="date" name="purchase_date" class="form-control" placeholder="Purchase Date">
+                </div> 
+                <div class="input-group">
+                    <select name="supplier" class="form-select" id="inputGroupSelect02">
+                      <option disabled selected>suppliers...</option>
+                      {%for supplier in suppliers%}
+                        <option value="{{supplier.id}}">{{supplier}}</option>
+                      {%endfor%}
+                    </select>
+                </div>
+                <div class="input-group">
+                  <select name="brand" class="form-select" id="inputGroupSelect02">
+                    <option disabled selected>brands...</option>
+                    {%for brand in brands%}
+                      <option value="{{brand.id}}">{{brand}}</option>
+                    {%endfor%}
+                  </select>
+                </div>                     
+                <div class="input-group">
+                  <select name="category" class="form-select" id="inputGroupSelect02">
+                    <option disabled selected>categories...</option>
+                    {%for category in categories%}
+                      <option value="{{category.id}}">{{category}}</option>
+                    {%endfor%}
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-outline-secondary input-group-text" for="inputGroupSelect02">Filter</button>
+          </form>        
+        </div>
+        <div class="card-body p-0 overflow-scroll">
+            <table class="table table-striped">
+                <thead class="table-secondary sticky-top">
+                    <tr>
+                        <th scope="col" class="ps-3">Product</th>
+                        <th scope="col" class="text-center align-middle">Brand</th>
+                        <th scope="col" class="text-center align-middle">Category</th>
+                        <th scope="col" class="text-center align-middle">Quantity</th>
+                        <th scope="col" class="text-center align-middle">Cost</th>
+                        <th scope="col" class="text-center align-middle">Payment</th>
+                        <th scope="col" class="text-center align-middle">Due</th>
+                        <th scope="col" class="text-center align-middle">Purchase-Date</th>
+                        <th scope="col" class="pe-3 text-center align-middle">Option</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for each in purchases%}
+                        <tr>
+                            <td class="ps-3 align-middle">
+                                <a class="text-primary" href="{%url 'purchase-details' each.id%}">{{each.model}}</a>
+                            </td>
+                            <td class="text-center align-middle">{{each.brand}}</td>
+                            <td class="text-center align-middle">{{each.category}}</td>
+                            <td class="text-center align-middle">{{each.quantity}}</td>
+                            <td class="text-center align-middle">{{each.unit_cost}}</td>
+                            <td class="text-center align-middle text-success">{{each.paid_ammount}}</td>
+                            <td class="text-center align-middle text-danger">{{each.due_amount}}</td>
+                            <td class="text-center align-middle">{{each.purchase_date.date}}</td>
+                            <td class="pe-3 text-center align-middle text-primary">
+                                <a href="{%url 'purchase-details' each.id%}" class="btn btn-sm btn-outline-secondary">details</a>
+                            </td>
+                        </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{%endblock main%}

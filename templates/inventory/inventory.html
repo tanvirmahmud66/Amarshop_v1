@@ -1,0 +1,79 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%}Inventory | Amar Shop{%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+    
+    <div class="container card height-100 p-3">
+        <div class="row height-45">
+            <a href="{%url 'sales-list'%}" class="col effect m-1  d-flex justify-content-center align-items-center">
+                <div class="rounded-circle alert alert-info text-center p-4 d-flex flex-column justify-content-center align-items-center" style="width: 250px; height: 250px;">
+                    <img src="{% static 'icons/inventory/sale.png'%}" width="130" alt=""/>
+                    <div class="fs-bold fs-5">Sales</div>
+                </div>
+            </a>
+            <a href="{%url 'inventory-list' %}" class="col effect m-1  d-flex justify-content-center align-items-center">
+                <div class="rounded-circle alert alert-info text-center p-4 d-flex flex-column justify-content-center align-items-center" style="width: 250px; height: 250px;">
+                    <!-- <img src="{%static 'icons/inventory/inventory.png'%}" width="125" alt="inventory"/> -->
+                    <lord-icon
+                        src="https://cdn.lordicon.com/heexevev.json"
+                        trigger="hover"
+                        style="width:150px;height:150px"
+                    >
+                    </lord-icon>
+                    <div class="fs-bold fs-5">Inventory</div>
+                </div>
+            </a>
+            <a href="{%url 'purchase-list'%}" class="col m-1 effect d-flex justify-content-center align-items-center">
+                <div class="rounded-circle alert alert-info text-center p-4 d-flex flex-column justify-content-center align-items-center" style="width: 250px; height: 250px;">
+                    <!-- <img src="{%static 'icons/inventory/category.png'%}" width="125" alt="categroy"/> -->
+                    <img src="{%static 'icons/inventory/purchase.png'%}" width="120" alt="purchase"/>
+                    <div class="fs-bold fs-5">Purchase</div>
+                </div>
+            </a>
+        </div>
+        <div class="row height-45 mt-2">
+            <a href="{%url 'product-list' %}" class="col m-1 effect d-flex justify-content-center align-items-center">
+                <div class="rounded-circle alert alert-info text-center p-4 d-flex flex-column justify-content-center align-items-center" style="width: 250px; height: 250px;">
+                    <!-- <img src="{%static 'icons/inventory/product.png'%}" width="125" alt="product"/> -->
+                    <lord-icon
+                        src="https://cdn.lordicon.com/pgmktfgp.json"
+                        trigger="hover"
+                        style="width:150px;height:150px">
+                    </lord-icon>
+                    <div class="fs-bold fs-5">Product</div>
+                </div>
+            </a>
+            
+            <a href="{%url 'category-list' %}" class="col m-1 effect d-flex justify-content-center align-items-center">
+                <div class="rounded-circle alert alert-info text-center p-4 d-flex flex-column justify-content-center align-items-center" style="width: 250px; height: 250px;">
+                    <!-- <img src="{%static 'icons/inventory/category.png'%}" width="125" alt="categroy"/> -->
+                    <lord-icon
+                        src="https://cdn.lordicon.com/hmqggwrl.json"
+                        trigger="hover"
+                        style="width:150px;height:150px">
+                    </lord-icon>
+                    <div class="fs-bold fs-5">Category</div>
+                </div>
+            </a>
+            <a href="{%url 'brand-list' %}" class="col m-1 effect d-flex justify-content-center align-items-center">
+                <div class="rounded-circle alert alert-info text-center p-4 d-flex flex-column justify-content-center align-items-center" style="width: 250px; height: 250px;">
+                    <img src="{%static 'icons/inventory/brand.png'%}" width="125" alt="brand"/>
+                    <div class="fs-bold fs-5">Brand</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+</div>
+{%endblock main%}

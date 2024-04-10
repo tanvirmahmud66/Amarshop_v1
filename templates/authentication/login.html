@@ -1,0 +1,32 @@
+{% extends "authentication/Layout.html" %}
+{% load static %}
+
+{%block title%}Admin Login | Amar Shop{%endblock title%}
+
+{%block heading%}Admin Login{%endblock heading%}
+
+{%block form%}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="mt-3 d-flex flex-column">
+        <div class="mb-2 d-flex justify-content-between align-items-center">
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="rememberMe">
+                <label class="form-check-label" for="rememberMe">Remember Me</label>
+            </div>
+            <a href="{%url 'password_reset'%}" class="text-primary">Forget Password?</a>
+        </div>
+        <button class="btn btn-success" type="submit">Login</button>
+        <a href="{%url 'admin-signup'%}" class="mt-3 text-center text-primary">Create an admin account</a>
+    </div>
+</form>
+{%endblock form%}
+
+
+{%block text%} Please log in to manage your online store {%endblock text%}
+
+
+
+
+

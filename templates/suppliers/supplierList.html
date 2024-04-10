@@ -1,0 +1,65 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%}Suppliers | Amar Shop{%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/suppliers.css'%}">
+{%endblock link%}
+
+
+<!-- main body -->
+{%block main%}
+<div class="supplier">
+    
+    <div class="card height-100">
+        <div class="card-header d-flex justify-content-end align-items-center position-relative">
+            <div class="fs-4 fw-bold position-absolute top-50 start-50 translate-middle">Suppliers</div>
+            <a href="{%url 'create-supplier'%}" class="btn btn-sm btn-success">Add Supplier</a>
+        </div>
+        <div class="card-header d-flex justify-content-end align-items-center">
+            <form method="get" action="{%url 'inventory-list'%}" class="ms-2 d-flex">
+                <input class="form-control" type="text" name="company" placeholder="Company..">
+                <input class="form-control" type="email" name="email" placeholder="Email">
+                <input class="form-control" type="text" name="person" placeholder="Person..">
+                <input class="form-control" type="text" name="phone" placeholder="Phone..">
+                <button type="submit" class="btn btn-outline-secondary input-group-text" for="inputGroupSelect02">Filter</button>     
+          </form>
+        </div>
+        <div class="card-body p-0 overflow-scroll">
+            <table class="table table-striped">
+                <thead class="table-secondary sticky-top">
+                    <tr>
+                        <th scope="col" class="ps-3 align-middle">Company Name</th>
+                        <th scope="col" class="text-center align-middle">Email</th>
+                        <th scope="col" class="text-center align-middle">Contact Person</th>
+                        <th scope="col" class="text-center align-middle">Phone No.</th>
+                        <th scope="col" class="text-center align-middle">Address</th>
+                        <th scope="col" class="pe-3 text-center align-middle">Option</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for supplier in suppliers%}
+                    <tr>
+                        <td class="ps-3 align-middle">{{supplier.company_name}}</td>
+                        <td class="align-middle">{{supplier.email}}</td>
+                        <td class="align-middle">{{supplier.contact_person}}</td>
+                        <td class="align-middle">{{supplier.phone_number}}</td>
+                        <td class="align-middle">{{supplier.address}}</td>
+                        <td class="pe-3 align-middle">
+                            <div class="d-flex align-items-center">
+                                <a href="{%url 'supplier-update' supplier.id %}" class="btn btn-sm btn-outline-secondary me-1">Update</a>
+                                <a href="{%url 'supplier-delete' supplier.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{%endblock main%}

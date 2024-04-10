@@ -1,0 +1,93 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%} Update Inventory | Amar Shop {%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+
+    <div class="card height-100 d-flex justify-content-center align-items-center p-5">
+        
+            
+
+        <div class="card bordered border-success shadow-lg bg-body-tertiary rounded">
+            <div class="card-header fs-5 fw-bolder text-center">Update Inventory</div>
+            <div class="card-body">
+                <form method="post" accept="">
+                    {% csrf_token %}
+                    <!-- {{ form.as_p }} -->
+                    <div class="mb-3">
+                        <label for="{{ form.product_for_label }}" class="form-label">Product:</label>
+                        {{ form.product }}
+                        <div class="text-danger mt-1">
+                            {{ form.product.errors }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.quantity_for_label }}" class="form-label">Quantity:</label>
+                        {{ form.quantity }}
+                        <div class="text-danger mt-1">
+                            {{ form.quantity.errors }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="">
+                                <label for="{{ form.unit_cost_for_label }}" class="form-label">Cost per unit:</label>
+                                {{ form.unit_cost }}
+                                <div class="text-danger mt-1">
+                                    {{ form.unit_cost.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="">
+                                <label for="{{ form.total_cost_for_label }}" class="form-label">Total Cost:</label>
+                                {{ form.total_cost }}
+                                <div class="text-danger mt-1">
+                                    {{ form.total_cost.errors }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="">
+                                <label for="{{ form.unit_price_for_label }}" class="form-label">Price per unit:</label>
+                                {{ form.unit_price }}
+                                <div class="text-danger mt-1">
+                                    {{ form.unit_price.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="">
+                                <label for="{{ form.valuation_for_label }}" class="form-label">Total Valuation:</label>
+                                {{ form.valuation }}
+                                <div class="text-danger mt-1">
+                                    {{ form.valuation.errors }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <a href="{%url 'inventory-details' inventory.id%}" class="btn btn-sm btn-secondary">
+                            Cancel
+                        </a> 
+                        <button type="submit" class="ms-2 btn btn-sm btn-outline-success">Update</button>
+                    </div>
+                </form>                
+            </div>
+        </div>
+        
+    </div>
+
+</div>
+{%endblock main%}

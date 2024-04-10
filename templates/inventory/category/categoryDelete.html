@@ -1,0 +1,39 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%} Remove Category | Amar Shop {%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+
+    <div class="card height-100">
+        <div class="d-flex justify-content-center align-items-center height-100">
+            <div class="card border border-danger custom-card shadow-lg bg-body-tertiary rounded">
+                <div class="card-header fs-4 text-center text-danger">Are you sure to Delete Category?</div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {%csrf_token%}
+                        <div class="alert alert-danger" role="alert">
+                            <a class="alert-link">Warning:</a> Dataset of other table with this category will be removed forever.
+                        </div>
+                        <div class="text-center">"{{category}}"</div>
+                        <div class="width-100 mt-3 d-flex justify-content-center align-items-center">
+                            <a class="btn btn-sm btn-outline-secondary" href="{%url 'category-list'%}">Cancel</a>
+                            <button class="btn btn-sm btn-outline-danger ms-2" type="submit">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{%endblock main%}
