@@ -1,0 +1,69 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+{%block title%}Profile | Amar Shop{%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+
+<!-- main body -->
+{%block main%}
+<div class="card height-100 p-3">
+    <div class="d-flex justify-content-between align-items-center pb-2 border-bottom">
+        <div class="fw-bold fs-3">Profile</div>
+        <div class="me-1">
+            <a class="text-primary" href="{%url 'dashboard'%}">Dashboard</a> / <a>Profile</a>
+        </div>
+    </div>
+    <div class="mt-4 row gap-3">
+        <div class="col-3">
+            <div class="mb-2">Profile Picture</div>
+            <div class="img-sec">
+                {%if profile.profile_pic%}
+                    <img src="{{profile.profile_pic.url}}" alt="profile picture"/>
+                {%else%}
+                    <img src="{%static 'media/default_images/default_profile_image.jpg'%}" alt="defualt picture"/>
+                {%endif%}
+            </div>
+            <div class="text-center mt-3">
+                {%if profile.profile_pic%}
+                <a href="{%url 'profile-picture-remove' profile.id %}" class="btn btn-sm btn-outline-danger">Remove</a>
+                <a href="{%url 'profile-change-picture' profile.id %}" class="btn btn-sm btn-success">Change Picture</a>
+                {%else%}
+                <a href="{%url 'profile-change-picture' profile.id %}" class="btn btn-sm btn-outline-success">Upload Picture</a>
+                {%endif%}
+                
+            </div>
+            
+        </div>
+        <div class="col m-0">
+            <div>
+                <div class="mb-4">
+                    <div class="mb-2">First Name</div>
+                    <div class="info-box">{{profile.first_name}}</div>
+                </div>
+                <div class="mb-4">
+                    <div class="mb-2">Last Name</div>
+                    <div class="info-box">{{profile.last_name}}</div>
+                </div>
+                <div class="mb-4">
+                    <div class="mb-2">Email</div>
+                    <div class="info-box">{{profile.email}}</div>
+                </div>
+                <div class="mb-4">
+                    <div class="mb-2">Phone Number</div>
+                    <div class="info-box">+88-01XXXXXXXXX</div>
+                </div>
+                <div class="mb-4">
+                    <div class="mb-2">Address</div>
+                    <div class="info-box">Malibagh 1st Lane, Dhaka-1217</div>
+                </div>
+                <a href="{%url 'profile-update' profile.id%}" class="mt-3 btn btn-md btn-success">Update Profile</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%endblock main%}
