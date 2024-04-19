@@ -45,7 +45,20 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
     
-    
+
+
+# =========================================================================== admin panel Profile
+class Profile(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    about = models.TextField(null=True, blank=True)
+    phone = models.CharField(max_length=20, null=True, blank=True)
+    address = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        ordering = ['id']
+
+    def __str__(self):
+        return self.user
 
 
 # =========================================================================== Device Categories Model

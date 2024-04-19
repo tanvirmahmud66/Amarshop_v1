@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import (
     User,
+    Profile,
     Categories, 
     Brand, 
     Product, 
@@ -16,6 +17,11 @@ from .models import (
 
 class UserAdminView(admin.ModelAdmin):
     list_display = ('id', 'email', 'first_name', 'last_name', 'is_active', 'is_superuser','is_staff','profile_pic')
+
+
+class ProfileAdminview(admin.ModelAdmin):
+    list_display = ('id','user','about','phone', 'address')
+
 
 class CategroyAdminView(admin.ModelAdmin):
     list_display = ('id', 'category')
@@ -58,6 +64,7 @@ class SalesAdminView(admin.ModelAdmin):
 
 
 admin.site.register(User, UserAdminView)
+admin.site.register(Profile, ProfileAdminview)
 admin.site.register(Categories, CategroyAdminView)
 admin.site.register(Brand, BrandAdminView)
 admin.site.register(Product,ProductAdminView)

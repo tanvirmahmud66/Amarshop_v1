@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from multiupload.fields import MultiFileField
 from .models import (
     User,
+    Profile,
     Categories,
     Brand, 
     Inventory, 
@@ -31,9 +32,11 @@ class AdminCreateForm(UserCreationForm):
             elif user_type == 'superuser':
                 user.is_staff=True
                 user.is_superuser = True
-
+        
         if commit:
             user.save()
+            profile = Profile.objects.create(user=user)
+            profile.save()
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
