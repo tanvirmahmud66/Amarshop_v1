@@ -130,7 +130,11 @@
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="text-end text-black me-1">
                                 <div class="fw-bold">{{request.user.first_name}} {{request.user.last_name}}</div>
+                                {%if request.user.is_superuser%}
                                 <div class="text-primary">Admin</div>
+                                {%elif request.user.is_staff%}
+                                <div class="text-primary">Staff Member</div>
+                                {%endif%}
                             </div>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">

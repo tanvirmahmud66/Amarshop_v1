@@ -37,6 +37,7 @@ from .models import (
     Sales
 )
 from .forms import (
+    CustomerCreateForm,
     AdminCreateForm,
     UserProfilePictureForm,
     ProfileUpdateForm,
@@ -57,7 +58,10 @@ from .forms import (
 # ---------------------------------------------------- Mixin
 class SuperuserRequiredMixin(UserPassesTestMixin):
     def test_func(self):
-        return self.request.user.is_superuser
+        if self.request.user.is_superuser:
+            return self.request.user.is_superuser
+        if self.request.user.is_staff:
+            return self.request.user.is_staff
 
 class PreventLoggedInMixin(AccessMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -78,7 +82,7 @@ class AdminLoginView(PreventLoggedInMixin,LoginView):
     success_url = reverse_lazy('dashboard')
 
     def get_success_url(self):
-        if self.request.user.is_superuser:
+        if self.request.user.is_staff:
             return reverse_lazy('dashboard')
         else:
             print("User is not staff")

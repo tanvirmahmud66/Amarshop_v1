@@ -41,6 +41,14 @@
         <div class="col m-0">
             <div>
                 <div class="mb-4">
+                    <div class="mb-2">Role</div>
+                    {%if profile.is_superuser%}
+                    <div class="info-box">Admin</div>
+                    {%elif profile.is_staff%}
+                    <div class="info-box">Staff Member</div>
+                    {%endif%}
+                </div>
+                <div class="mb-4">
                     <div class="mb-2">First Name</div>
                     <div class="info-box">{{profile.first_name}}</div>
                 </div>

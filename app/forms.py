@@ -17,14 +17,21 @@ from .models import (
 
 # ---------------------------------------Admin create Form
 class AdminCreateForm(UserCreationForm):
+    user_type = forms.ChoiceField(choices=(('staff', 'Staff'), ('superuser', 'Admin')), initial='', widget=forms.Select())
     class Meta:
         model = User
         fields = ('email', 'first_name', 'last_name')
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.is_staff = True
-        user.is_superuser = True
+        if self.cleaned_data.get('user_type'):
+            user_type = self.cleaned_data.get('user_type')
+            if user_type == 'staff':
+                user.is_staff = True
+            elif user_type == 'superuser':
+                user.is_staff=True
+                user.is_superuser = True
+
         if commit:
             user.save()
         return user
@@ -34,6 +41,18 @@ class AdminCreateForm(UserCreationForm):
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)  # Ensure the proper database is used
+        return user
+
+# ------------------------------------------------- customer create form
+class CustomerCreateForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('email', 'first_name', 'last_name')
+
+    def save(self, commit=True):
+        user = super().save()
+        if commit:
+            user.save()
         return user
 
 # -------------------------------------- Profile Picture Form

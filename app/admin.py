@@ -15,7 +15,7 @@ from .models import (
 # Register your models here.
 
 class UserAdminView(admin.ModelAdmin):
-    list_display = ('id', 'email', 'first_name', 'last_name', 'is_active', 'is_staff','profile_pic')
+    list_display = ('id', 'email', 'first_name', 'last_name', 'is_active', 'is_superuser','is_staff','profile_pic')
 
 class CategroyAdminView(admin.ModelAdmin):
     list_display = ('id', 'category')
