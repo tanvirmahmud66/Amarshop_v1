@@ -1,0 +1,55 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%} All Category | Amar Shop {%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+
+    <div class="card height-100">
+        <div class="sticky-top bg-white">
+            <div class="card-header d-flex justify-content-between align-items-center position-relative">
+                <a href="{%url 'category-list'%}" class="btn-back btn-sm">Back</a>
+                <div class="fs-5 fw-bold position-absolute top-50 start-50 translate-middle">{{category}}</div>
+                <a href="{%url 'create-sub' category%}" class="btn btn-success btn-sm">Create New</a>
+            </div>
+            <div class="card-header">
+                <div>
+                    <form method="get" action="{%url 'category-list'%}" class="d-flex">
+                        <input class="form-control" type="text" name="q" placeholder="search category...">
+                        <button class="btn btn-sm btn-outline-secondary" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card-body overflow-scroll">
+            <!-- <ul class="list-group">
+                {%for subcategory in subcategories%}
+                <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div class="fw-bold">{{subcategory}}</div>                    
+                </li>
+                {%endfor%}
+            </ul> -->
+            <div class="row">
+                {% for subcategory in subcategories %}
+                <a href="#" class="col-3 mb-4">
+                    <div class="card m-0">
+                        <div class="card-body">
+                            <div class="text-center fw-bold">{{ subcategory }}</div>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>  
+
+</div>
+{%endblock main%}

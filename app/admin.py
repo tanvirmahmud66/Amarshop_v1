@@ -1,15 +1,17 @@
 from django.contrib import admin
 from .models import (
     User,
+    Customer,
     Profile,
-    Categories, 
+    Categories,
+    SubCategory, 
     Brand, 
-    Product, 
+    Product,
+    Product_Image, 
     Inventory, 
     Supplier,
     Transaction,
     Purchase, 
-    GeneralUser, 
     ProductLineUp, 
     Sales
 )
@@ -18,6 +20,8 @@ from .models import (
 class UserAdminView(admin.ModelAdmin):
     list_display = ('id', 'email', 'first_name', 'last_name', 'is_active', 'is_superuser','is_staff','profile_pic')
 
+class CustomerAdminView(admin.ModelAdmin):
+    list_display = ('id','user','name','email','phone','address')
 
 class ProfileAdminview(admin.ModelAdmin):
     list_display = ('id','user','about','phone', 'address')
@@ -26,14 +30,18 @@ class ProfileAdminview(admin.ModelAdmin):
 class CategroyAdminView(admin.ModelAdmin):
     list_display = ('id', 'category')
 
+class SubCategoryAdminView(admin.ModelAdmin):
+    list_display = ('id','name','category')
 
 class BrandAdminView(admin.ModelAdmin):
     list_display = ('id','brand')
 
 
 class ProductAdminView(admin.ModelAdmin):
-    list_display = ('id','category','brand','model','cost','price','description','productImg','released_year','created_at')
+    list_display = ('id','category','subcategory','brand','model','cost','price','description','productImg','released_year','created_at')
 
+class ProductImageAdminView(admin.ModelAdmin):
+    list_display = ('id','product','image')
 
 class InventoryAdminView(admin.ModelAdmin):
     list_display = ('id', 'product', 'quantity','unit_price','unit_cost','total_cost','valuation','profit','last_updated', 'created_at')
@@ -51,8 +59,6 @@ class PurchaseAdminView(admin.ModelAdmin):
     list_display = ('id','category','brand','model','quantity','unit_cost','supplier','transaction_type','payment_method','paid_ammount','reference','due_amount','purchase_date')
 
 
-class GeneralUserAdminView(admin.ModelAdmin):
-    list_display = ('id','first_name','last_name','email','phone')
 
 
 class InvoiceAdminView(admin.ModelAdmin):
@@ -60,18 +66,20 @@ class InvoiceAdminView(admin.ModelAdmin):
 
 
 class SalesAdminView(admin.ModelAdmin):
-    list_display = ('id','user','general_user','amount','product_quantity','sales_date')
+    list_display = ('id','customer','amount','product_quantity','sales_date')
 
 
 admin.site.register(User, UserAdminView)
+admin.site.register(Customer,CustomerAdminView)
 admin.site.register(Profile, ProfileAdminview)
 admin.site.register(Categories, CategroyAdminView)
+admin.site.register(SubCategory, SubCategoryAdminView)
 admin.site.register(Brand, BrandAdminView)
 admin.site.register(Product,ProductAdminView)
+admin.site.register(Product_Image,ProductImageAdminView)
 admin.site.register(Inventory, InventoryAdminView)
 admin.site.register(Supplier, SupplierAdminView)
 admin.site.register(Transaction,TransactionAdminView)
 admin.site.register(Purchase, PurchaseAdminView)
-admin.site.register(GeneralUser, GeneralUserAdminView)
 admin.site.register(ProductLineUp,InvoiceAdminView)
 admin.site.register(Sales, SalesAdminView)

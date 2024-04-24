@@ -3,15 +3,16 @@ from django.contrib.auth.forms import UserCreationForm
 from multiupload.fields import MultiFileField
 from .models import (
     User,
+    Customer,
     Profile,
     Categories,
+    SubCategory,
     Brand, 
     Inventory, 
     Transaction,
     Product, 
     Supplier,
     Purchase,
-    GeneralUser,
     ProductLineUp,
     Sales
 )
@@ -79,6 +80,12 @@ class CategoryForm(forms.ModelForm):
         fields = '__all__'
 
 
+# -------------------------------------- Sub category Form
+class SubCategoryForm(forms.ModelForm):
+    class Meta:
+        model = SubCategory
+        fields = ['name']
+
 # --------------------------------------- Brand Form
 class BrandForm(forms.ModelForm):
     class Meta:
@@ -130,9 +137,9 @@ class PurchaseForm(forms.ModelForm):
     
 
 # ------------------------------------------ General Form
-class GeneralUserForm(forms.ModelForm):
+class CustomerForm(forms.ModelForm):
     class Meta:
-        model = GeneralUser
+        model = Customer
         fields = '__all__'
 
 

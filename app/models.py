@@ -46,6 +46,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
     
 
+# =========================================================== Customer
+class Customer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True,blank=True)
+    name = models.CharField(max_length=255, unique=True, null=True,blank=True)
+    email = models.EmailField(max_length=255, unique=True,null=True, blank=True)
+    phone = models.CharField(max_length=20, unique=True)
+    address = models.TextField(max_length=355,null=True, blank=True)
+    
+    class Meta:
+        ordering = ['-id']
+    
+    def __str__(self):
+        return f"{self.id}"
 
 # =========================================================================== admin panel Profile
 class Profile(models.Model):
@@ -73,6 +86,18 @@ class Categories(models.Model):
     
 
 
+# ========================================================================== Sub Category model
+class SubCategory(models.Model):
+    name = models.CharField(max_length=255)
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['-id']
+    
+    def __str__(self):
+        return self.name
+
+
 #============================================================================ Brand Model 
 class Brand(models.Model):
     brand = models.CharField(max_length=255, unique=True)
@@ -86,13 +111,14 @@ class Brand(models.Model):
 
 
 
-#============================================================================ Devices Model
+#============================================================================ Product Model
 def product_image_path(instance, filename):
     return os.path.join('Product_Image', f'{instance.model}', filename)
 
 
 class Product(models.Model):
     category = models.ForeignKey(Categories, on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE,null=True, blank=True)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
     cost = models.PositiveIntegerField(null=True,blank=True)
@@ -108,7 +134,21 @@ class Product(models.Model):
     def __str__(self):
         return self.model
     
+
+# ============================================================================== Product Img Model
+def Image_path(instance, filename):
+    return os.path.join('Product_Image', f'{instance.product.model}', filename)
+
+class Product_Image(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to=Image_path,null=True, blank=True)
+
+    class Meta:
+        ordering = ['id']
     
+    def __str__(self):
+        return self.id
+
 
 #=============================================================================== supplier model
 class Supplier(models.Model):
@@ -195,25 +235,10 @@ class Purchase(models.Model):
         return self.model
 
 
-# =========================================================== Generel User
-class GeneralUser(models.Model):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255, null=True, blank=True)
-    email = models.EmailField(max_length=255, unique=True,null=True, blank=True)
-    phone = models.CharField(max_length=20, unique=True)
-
-    class Meta:
-        ordering = ['-id']
-    
-    def __str__(self):
-        return f"{self.id}"
-
-
 
 # ============================================================ Sales Model
 class Sales(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True, blank=True)
-    general_user = models.ForeignKey(GeneralUser, on_delete=models.CASCADE, null=True, blank=True)
+    customer = models.ForeignKey(Customer,on_delete=models.CASCADE,null=True, blank=True)
     amount = models.IntegerField(null=True,blank=True)
     product_quantity = models.BigIntegerField(null=True,blank=True)
     sales_date = models.DateTimeField(auto_now_add=True)

@@ -25,30 +25,31 @@ from django.views.generic import (
 )
 from .models import (
     User,
+    Customer,
     Categories, 
+    SubCategory,
     Brand, 
     Inventory, 
     Product, 
     Supplier,
     Purchase,
     Transaction,
-    GeneralUser, 
     ProductLineUp,
     Sales
 )
 from .forms import (
-    CustomerCreateForm,
+    CustomerForm,
     AdminCreateForm,
     UserProfilePictureForm,
     ProfileUpdateForm,
     CategoryForm , 
+    SubCategoryForm,
     BrandForm, 
     InventoryForm,
     InventoryPriceSetForm,
     Productform, 
     SupplierForm,
     PurchaseForm,
-    GeneralUserForm,
     ProductLineUpForm,
     TransactionForm,
     SalesForm
@@ -250,8 +251,8 @@ class SaleDetailsView(SuperuserRequiredMixin, DetailView):
 
 # --------------------------------------------------------------- General user create view
 class ClientUserView(SuperuserRequiredMixin, CreateView):
-    model = GeneralUser
-    form_class = GeneralUserForm
+    model = Customer
+    form_class = CustomerForm
     template_name = 'inventory/sales/createClientUser.html'
 
     def get_success_url(self):
@@ -271,7 +272,7 @@ class ClientUserView(SuperuserRequiredMixin, CreateView):
     
     def form_invalid(self, form):
         email = form.data['email']
-        general_user = GeneralUser.objects.filter(email=email).first()
+        general_user = Customer.objects.filter(email=email).first()
         if general_user:
             return redirect('invoice-list', pk=form.data['email'])
         return super().form_invalid(form)
@@ -296,8 +297,8 @@ class InvoiceListView(SuperuserRequiredMixin, ListView):
         if pk:
             if User.objects.filter(email=pk).exists():
                 context['buyer'] = User.objects.filter(email=pk).first()
-            if GeneralUser.objects.filter(email=pk).exists():
-                context['buyer'] = GeneralUser.objects.filter(email=pk).first()
+            if Customer.objects.filter(email=pk).exists():
+                context['buyer'] = Customer.objects.filter(email=pk).first()
         return context
 
 
@@ -367,8 +368,8 @@ class SalesPayment(SuperuserRequiredMixin, CreateView):
         if pk:
             if User.objects.filter(email=pk).exists():
                 context['customer'] = User.objects.filter(email=pk).first()
-            if GeneralUser.objects.filter(email=pk).exists():
-                context['customer'] = GeneralUser.objects.filter(email=pk).first()
+            if Customer.objects.filter(email=pk).exists():
+                context['customer'] = Customer.objects.filter(email=pk).first()
         return context
     
     def form_valid(self, form):
@@ -398,7 +399,7 @@ class SalesPayment(SuperuserRequiredMixin, CreateView):
             obj.sale = self.sale
             obj.save()
         else:
-            general_user = GeneralUser.objects.get(email=email)
+            general_user = Customer.objects.get(email=email)
             self.sale = Sales.objects.create(
                 general_user=general_user,
                 amount=obj.amount,
@@ -846,6 +847,49 @@ class CategoryDeleteView(SuperuserRequiredMixin,DeleteView):
     template_name = 'inventory/category/categoryDelete.html'
     success_url = reverse_lazy('category-list')
 
+
+# --------------------------------------------------------------- sub category list view
+class SubcategoryListView(SuperuserRequiredMixin,ListView):
+    model = SubCategory
+    context_object_name = 'subcategories'
+    template_name = 'inventory/category/subcategory.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category = self.kwargs.get('pk',None)
+        queryset = queryset.filter(category__category__icontains=category)
+        return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = self.kwargs.get('pk',None)
+        print(category)
+        context['category'] = category
+        return context
+    
+
+# --------------------------------------------------------------- create subcategory
+class SubCategoryCreateView(SuperuserRequiredMixin, CreateView):
+    model = SubCategory
+    form_class = SubCategoryForm
+    template_name = 'inventory/category/createSubCate.html'
+    
+    def get_success_url(self, **kwargs) -> str:
+        category = self.kwargs.get('pk',None)
+        return reverse('sub-categories', kwargs={'pk': category})
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = self.kwargs.get('pk',None)
+        print(category)
+        context['category'] = category
+        return context
+
+    def form_valid(self, form):
+        category = self.kwargs.get('pk',None)
+        Category = Categories.objects.filter(category__icontains=category)[0]
+        form.instance.category = Category
+        return super().form_valid(form)
 
 
 # ==========================================BRAND SECTION=======================================
