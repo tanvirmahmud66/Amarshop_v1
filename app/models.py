@@ -120,12 +120,12 @@ class Product(models.Model):
     category = models.ForeignKey(Categories, on_delete=models.CASCADE)
     subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE,null=True, blank=True)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
-    model = models.CharField(max_length=255)
+    product_name = models.CharField(max_length=255)
+    product_code = models.CharField(max_length=20,null=True,blank=True)
     cost = models.PositiveIntegerField(null=True,blank=True)
     price = models.PositiveIntegerField(null=True,blank=True)
     description = models.TextField(null=True, blank=True)
     productImg = models.ImageField(upload_to=product_image_path, null=True, blank=True,)
-    released_year = models.DateField(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -170,6 +170,7 @@ class Supplier(models.Model):
 class Inventory(models.Model):
     product = models.OneToOneField(Product, on_delete=models.CASCADE, unique=True)
     quantity = models.PositiveIntegerField()
+    stock_alert = models.PositiveIntegerField(default=5)
     unit_price = models.PositiveIntegerField(null=True,blank=True)
     unit_cost = models.PositiveIntegerField()
     total_cost = models.PositiveBigIntegerField(null=True, blank=True)
@@ -210,29 +211,64 @@ class Purchase(models.Model):
         ('UCash', 'UCash'),
         ('Payoneer','Payoneer'),
     ]
+    STATUS = [
+        ('Received','Received'),
+        ('Ordered','Ordered'),
+        ('Pending','Pending'),
+    ]
+    PAYMENT_STATUS = [
+        ('Paid','Paid'),
+        ('Due','Due'),
+        ('Partial','Partial')
+    ]
 
-    category = models.ForeignKey(Categories, on_delete=models.CASCADE)
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
-    model = models.CharField(max_length=255)
-    quantity = models.PositiveIntegerField()
-    unit_cost = models.PositiveIntegerField()
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, null=True, blank=True)
-    transaction_type = models.CharField(max_length=10,null=True,blank=True,default='OUT')
+    status = models.CharField(max_length=50,choices=STATUS)
+    payment_status = models.CharField(max_length=50,choices=PAYMENT_STATUS)
     payment_method = models.CharField(max_length=50,choices=PAYMENT_METHOD)
-    paid_ammount = models.PositiveBigIntegerField()
-    reference = models.CharField(max_length=100,null=True,blank=True) 
-    due_amount = models.PositiveBigIntegerField(default=0)
-    purchase_date = models.DateTimeField(auto_now_add=True)
+    grand_total = models.PositiveBigIntegerField()
+    paid = models.PositiveBigIntegerField() 
+    due = models.PositiveBigIntegerField(default=0)
+    date = models.DateTimeField(auto_now_add=True)
+    total_discount = models.IntegerField(default=0,null=True,blank=True)
+    total_tax = models.IntegerField(default=0,null=True,blank=True)
+    shipping = models.IntegerField(default=0,null=True,blank=True)
 
     class Meta:
-        ordering = ['-purchase_date']
+        ordering = ['-date']
 
     def save(self, *args, **kwargs):
-        self.due_amount = (self.quantity*self.unit_cost) - self.paid_ammount
+        self.due = self.grand_total - self.paid 
         super().save(*args, **kwargs)
     
     def __str__(self):
-        return self.model
+        return self.id
+
+
+
+# ============================================================ Purchase Line up
+class PurchaseLineUp(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
+    product_name = models.CharField(max_length=255,null=True,blank=True)
+    category = models.ForeignKey(Categories, on_delete=models.SET_NULL,null=True, blank=True)
+    subcategory = models.ForeignKey(SubCategory,on_delete=models.SET_NULL,null=True,blank=True)
+    brand = models.ForeignKey(Brand,on_delete=models.SET_NULL,null=True,blank=True)
+    unit_price = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()
+    subtotal = models.PositiveBigIntegerField()
+    discount = models.IntegerField(default=0, null=True,blank=True)
+    tax = models.IntegerField(default=0,null=True,blank=True)
+    purchase_confirm = models.BooleanField(default=False)
+    purchase_reference = models.ForeignKey(Purchase,on_delete=models.CASCADE,null=True,blank=True)
+
+    def save(self,*args, **kwargs):
+        self.subtotal = (self.unit_price * self.quantity)
+        super().save(*args,**kwargs)
+
+    def __str__(self):
+        return self.id
+
+
 
 
 

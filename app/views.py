@@ -38,21 +38,25 @@ from .models import (
     Sales
 )
 from .forms import (
-    CustomerForm,
     AdminCreateForm,
     UserProfilePictureForm,
-    ProfileUpdateForm,
-    CategoryForm , 
+    UserUpdateForm,
+    ProfileForm,
+    CategoryForm,
     SubCategoryForm,
-    BrandForm, 
+    BrandForm,
     InventoryForm,
     InventoryPriceSetForm,
-    Productform, 
+    Productform,
+    ProductImageForm,
     SupplierForm,
     PurchaseForm,
+    PurchaseLinuUpForm,
+    CustomerForm,
     ProductLineUpForm,
+    SalesForm,
     TransactionForm,
-    SalesForm
+
 )
 
 # =========================================AUTHENTICATION SECTION===================================
@@ -139,7 +143,7 @@ class ProfilePictureRemoveView(UpdateView):
 # ---------------------------------------------------------- Profile Update View
 class ProfileUpdateView(SuperuserRequiredMixin, UpdateView):
     model = User
-    form_class = ProfileUpdateForm
+    form_class = ProfileForm
     template_name = 'profile/profileUpdate.html'
 
     def get_success_url(self):

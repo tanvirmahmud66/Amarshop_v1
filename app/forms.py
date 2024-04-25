@@ -11,8 +11,10 @@ from .models import (
     Inventory, 
     Transaction,
     Product, 
+    Product_Image,
     Supplier,
     Purchase,
+    PurchaseLineUp,
     ProductLineUp,
     Sales
 )
@@ -47,17 +49,17 @@ class AdminCreateForm(UserCreationForm):
         user.save(using=self._db)  # Ensure the proper database is used
         return user
 
-# ------------------------------------------------- customer create form
-class CustomerCreateForm(UserCreationForm):
-    class Meta:
-        model = User
-        fields = ('email', 'first_name', 'last_name')
+# # ------------------------------------------------- customer create form
+# class CustomerCreateForm(UserCreationForm):
+#     class Meta:
+#         model = User
+#         fields = ('name', 'email', 'phone','address')
 
-    def save(self, commit=True):
-        user = super().save()
-        if commit:
-            user.save()
-        return user
+#     def save(self, commit=True):
+#         user = super().save()
+#         if commit:
+#             user.save()
+#         return user
 
 # -------------------------------------- Profile Picture Form
 class UserProfilePictureForm(forms.ModelForm):
@@ -67,10 +69,15 @@ class UserProfilePictureForm(forms.ModelForm):
 
 
 # -------------------------------------- Profile Picture Form
-class ProfileUpdateForm(forms.ModelForm):
+class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name','last_name','email']
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['about','phone','address']
 
 
 # -------------------------------------- Category Form
@@ -112,9 +119,13 @@ class Productform(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'description': forms.Textarea(attrs={'rows': 5}), 
-            'released_year': forms.SelectDateWidget(years=range(2018, 2030))
         }
 
+# ---------------------------------------- Product image form
+class ProductImageForm(forms.ModelForm):
+    class Meta:
+        model = Product_Image
+        fields= ['image']
 
 # ---------------------------------------- Supplier Form
 class SupplierForm(forms.ModelForm):
@@ -130,17 +141,21 @@ class SupplierForm(forms.ModelForm):
 class PurchaseForm(forms.ModelForm):
     class Meta:
         model = Purchase
-        fields = ['category','brand','model','quantity','unit_cost','supplier','payment_method','paid_ammount','reference']
-        widgets = {
-            'address': forms.Textarea(attrs={'rows': 1})
-        }
-    
+        fields = ['supplier','status','payment_method','paid','shipping']
+        
+
+#  --------------------------------------- Purchase Lineup Form
+class PurchaseLinuUpForm(forms.ModelForm):
+    class Meta:
+        model = PurchaseLineUp
+        fields = ['product','product_name','category','subcategory','brand','unit_price','quantity', 'discount','tax']
+
 
 # ------------------------------------------ General Form
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
-        fields = '__all__'
+        fields = ['name','email','phone','address']
 
 
 # ------------------------------------------ Product Line up form

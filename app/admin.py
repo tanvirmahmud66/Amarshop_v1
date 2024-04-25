@@ -11,7 +11,8 @@ from .models import (
     Inventory, 
     Supplier,
     Transaction,
-    Purchase, 
+    Purchase,
+    PurchaseLineUp, 
     ProductLineUp, 
     Sales
 )
@@ -38,13 +39,13 @@ class BrandAdminView(admin.ModelAdmin):
 
 
 class ProductAdminView(admin.ModelAdmin):
-    list_display = ('id','category','subcategory','brand','model','cost','price','description','productImg','released_year','created_at')
+    list_display = ('id','category','subcategory','brand','product_name','product_code','cost','price','description','productImg','created_at')
 
 class ProductImageAdminView(admin.ModelAdmin):
     list_display = ('id','product','image')
 
 class InventoryAdminView(admin.ModelAdmin):
-    list_display = ('id', 'product', 'quantity','unit_price','unit_cost','total_cost','valuation','profit','last_updated', 'created_at')
+    list_display = ('id', 'product', 'quantity','stock_alert','unit_price','unit_cost','total_cost','valuation','profit','last_updated', 'created_at')
 
 
 class SupplierAdminView(admin.ModelAdmin):
@@ -56,9 +57,10 @@ class TransactionAdminView(admin.ModelAdmin):
 
 
 class PurchaseAdminView(admin.ModelAdmin):
-    list_display = ('id','category','brand','model','quantity','unit_cost','supplier','transaction_type','payment_method','paid_ammount','reference','due_amount','purchase_date')
+    list_display = ('id','supplier','status','payment_status','grand_total','paid','due','date','total_discount','total_tax','shipping')
 
-
+class PurchaseLineUpAdminView(admin.ModelAdmin):
+    list_display = ('id','product','product_name','category','subcategory','brand','unit_price','quantity','subtotal','discount','tax','purchase_confirm','purchase_reference')
 
 
 class InvoiceAdminView(admin.ModelAdmin):
@@ -81,5 +83,6 @@ admin.site.register(Inventory, InventoryAdminView)
 admin.site.register(Supplier, SupplierAdminView)
 admin.site.register(Transaction,TransactionAdminView)
 admin.site.register(Purchase, PurchaseAdminView)
+admin.site.register(PurchaseLineUp, PurchaseLineUpAdminView)
 admin.site.register(ProductLineUp,InvoiceAdminView)
 admin.site.register(Sales, SalesAdminView)
