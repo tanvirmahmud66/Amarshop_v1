@@ -27,6 +27,9 @@ ul{
 .width-50{
     width: 50%;
 }
+.width-40{
+    width: 40%;
+}
 .width-auto{
     width: auto;
 }
@@ -127,3 +130,30 @@ ul{
     width: 100%;
     height: auto;
 }
+
+
+.green-btn{
+    border: none;
+    border-radius: 5px;
+    padding: .1rem .8rem;
+    background:rgba(109, 226, 112, 0.293);
+    color: rgb(7, 152, 7);
+}
+
+
+.purple-btn{
+    border: none;
+    border-radius: 5px;
+    padding: .1rem .8rem;
+    background-color: rgba(133, 89, 221, 0.195);
+    color: rgb(76, 6, 180);
+}
+
+.red-btn{
+    border: none;
+    border-radius: 5px;
+    padding: .1rem .8rem;
+    background: rgba(237, 115, 115, 0.262);
+    color: rgb(182, 7, 7);
+}
+

@@ -14,79 +14,88 @@
 <div class="inventory">
 
     <div class="card height-100">
-        <div class="card-header d-flex justify-content-end align-items-center position-relative">
-            <div class="fs-4 fw-bold position-absolute top-50 start-50 translate-middle">Purchase List</div>
-            <a href="{%url 'new-purchase'%}" class="btn btn-success btn-sm">New Purchase</a>
+        <div class="p-3 bg-white pt-3 pb-3 d-flex justify-content-between align-items-center">
+            <div class="fs-5 fw-bold d-flex align-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="25px" width="25px" class="me-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+              </svg>              
+              Purchase
+            </div>
+            <div class="d-flex align-items-center">
+              <button type="button" class="me-2 btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                </svg>                
+                Filter
+              </button>
+              <a href="{%url 'new-purchase-invoice'%}" id="new-invoice" class="btn btn-success btn-sm d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px" class="me-1">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>              
+                New Purchase
+              </a>
+            </div>
         </div>
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <div>
-                <form method="get" action="{%url 'purchase-list'%}" class="d-flex">
-                    <input class="form-control" type="text" name="q" placeholder="search product...">
-                    <button class="btn btn-sm btn-outline-secondary" type="submit">Search</button>
-                </form>
-            </div> 
-                   
-            <form method="get" action="{%url 'purchase-list'%}" class="ms-2 d-flex">
-                <div class="input-group">
-                    <input type="date" name="purchase_date" class="form-control" placeholder="Purchase Date">
-                </div> 
-                <div class="input-group">
-                    <select name="supplier" class="form-select" id="inputGroupSelect02">
-                      <option disabled selected>suppliers...</option>
-                      {%for supplier in suppliers%}
-                        <option value="{{supplier.id}}">{{supplier}}</option>
-                      {%endfor%}
-                    </select>
-                </div>
-                <div class="input-group">
-                  <select name="brand" class="form-select" id="inputGroupSelect02">
-                    <option disabled selected>brands...</option>
-                    {%for brand in brands%}
-                      <option value="{{brand.id}}">{{brand}}</option>
-                    {%endfor%}
-                  </select>
-                </div>                     
-                <div class="input-group">
-                  <select name="category" class="form-select" id="inputGroupSelect02">
-                    <option disabled selected>categories...</option>
-                    {%for category in categories%}
-                      <option value="{{category.id}}">{{category}}</option>
-                    {%endfor%}
-                  </select>
-                </div>
-                <button type="submit" class="btn btn-outline-secondary input-group-text" for="inputGroupSelect02">Filter</button>
-          </form>        
-        </div>
-        <div class="card-body p-0 overflow-scroll">
-            <table class="table table-striped">
-                <thead class="table-secondary sticky-top">
+       
+        <div class="card-body overflow-scroll">
+            <table class="table table-hover table-sm">
+                <thead class="sticky-top">
                     <tr>
-                        <th scope="col" class="ps-3">Product</th>
-                        <th scope="col" class="text-center align-middle">Brand</th>
-                        <th scope="col" class="text-center align-middle">Category</th>
-                        <th scope="col" class="text-center align-middle">Quantity</th>
-                        <th scope="col" class="text-center align-middle">Cost</th>
-                        <th scope="col" class="text-center align-middle">Payment</th>
+                        <th scope="col" class="ps-3">Date</th>
+                        <th scope="col" class="text-center align-middle">Supplier</th>
+                        <th scope="col" class="text-center align-middle">Status</th>
+                        <th scope="col" class="text-center align-middle">Grand Total</th>
+                        <th scope="col" class="text-center align-middle">Paid</th>
                         <th scope="col" class="text-center align-middle">Due</th>
-                        <th scope="col" class="text-center align-middle">Purchase-Date</th>
-                        <th scope="col" class="pe-3 text-center align-middle">Option</th>
+                        <th scope="col" class="text-center align-middle">Payment Status</th>
+                        <th scope="col" class="pe-3 text-end align-middle">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {%for each in purchases%}
                         <tr>
-                            <td class="ps-3 align-middle">
-                                <a class="text-primary" href="{%url 'purchase-details' each.id%}">{{each.model}}</a>
+                            <td class="ps-3 align-middle text-secondary">{{each.date}}</td>
+                            <td class="text-center align-middle">{{each.supplier}}</td>
+                            <td class="text-center align-middle">
+                              {%if each.status == 'Received' %}
+                                <button class="green-btn">{{each.status}}</button>
+                              {%elif each.status == 'Ordered'%}
+                                <button class="purple-btn">{{each.status}}</button>
+                              {%else%}
+                                <button class="red-btn">{{each.status}}</button>
+                              {%endif%}
                             </td>
-                            <td class="text-center align-middle">{{each.brand}}</td>
-                            <td class="text-center align-middle">{{each.category}}</td>
-                            <td class="text-center align-middle">{{each.quantity}}</td>
-                            <td class="text-center align-middle">{{each.unit_cost}}</td>
-                            <td class="text-center align-middle text-success">{{each.paid_ammount}}</td>
-                            <td class="text-center align-middle text-danger">{{each.due_amount}}</td>
-                            <td class="text-center align-middle">{{each.purchase_date.date}}</td>
-                            <td class="pe-3 text-center align-middle text-primary">
-                                <a href="{%url 'purchase-details' each.id%}" class="btn btn-sm btn-outline-secondary">details</a>
+                            <td class="text-center align-middle">{{each.grand_total|floatformat:"2"}}</td>
+                            <td class="text-center align-middle">{{each.paid|floatformat:"2"}}</td>
+                            <td class="text-center align-middle">
+                              {%if each.due%}
+                                <div class="text-danger">{{each.due|floatformat:"2"}}</div>
+                              {%else%}
+                                -
+                              {%endif%}
+                            </td>
+                            <td class="text-center align-middle">
+                              {%if each.payment_status == 'Paid' %}
+                                <button class="green-btn">Paid</button>
+                              {%elif each.payment_status == 'Due' %}
+                                <button class="red-btn">Due</button>
+                              {%else%}
+                                <button class="purple-btn">Partial</button>
+                              {%endif%}
+                            </td>
+                            <td class="pe-3 text-end align-middle text-primary">
+                                <div class="btn-group">
+                                  <a href="{%url 'purchase-details' each.id%}" class="btn btn-outline-secondary btn-sm" type="button">
+                                    View Invoice
+                                  </a>
+                                  <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="visually-hidden">Toggle Dropdown</span>
+                                  </button>
+                                  <ul class="dropdown-menu">
+                                    <a href="{%url 'purchase-update' each.id %}" class="dropdown-item">Update</a>
+                                    <a href="{%url 'purchase-delete' each.id %}" class="dropdown-item text-danger">Remove</a>
+                                  </ul>
+                                </div>
                             </td>
                         </tr>
                     {%endfor%}
@@ -96,4 +105,75 @@
     </div>
 
 </div>
+
+
+<!-- Filter Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Filter Purchase List</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <div class="">       
+            <form method="get" action="{%url 'purchase-list'%}" class="">
+                <div class="input-group mb-3">
+                    <input type="date" name="date" class="form-control" placeholder="Purchase Date">
+                </div> 
+                <div class="input-group mb-3">
+                    <select name="supplier" class="form-select" id="inputGroupSelect02">
+                      <option disabled selected>Suppliers</option>
+                      {%for supplier in suppliers%}
+                        <option value="{{supplier.id}}">{{supplier}}</option>
+                      {%endfor%}
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                  <select name="status" class="form-select" id="inputGroupSelect02">
+                    <option disabled selected>Status</option>
+                    <option value="Received">Received</option>
+                    <option value="Ordered">Ordered</option>
+                    <option value="Pending">Pending</option>
+                  </select>
+                </div>
+                <div class="input-group mb-3">
+                  <select name="payment_status" class="form-select" id="inputGroupSelect02">
+                    <option disabled selected>Payment Status</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Due">Due</option>
+                    <option value="Partial">Partial</option>
+                  </select>
+                </div>
+                <div class="d-flex justify-content-end mt-3">
+                  <button type="submit" class="btn btn-outline-primary btn-md input-group-text d-flex align-items-center" for="inputGroupSelect02">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px" class="me-2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                    </svg>    
+                    Filter
+                  </button>
+                </div>
+            </form>        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Invoice Modal -->
+<div class="modal fade" id="invoice_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Purchase Invoice ID: {{each.id}}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        This is new modal
+      </div>
+    </div>
+  </div>
+</div>
+
 {%endblock main%}
+

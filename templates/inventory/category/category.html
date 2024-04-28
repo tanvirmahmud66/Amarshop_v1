@@ -13,16 +13,18 @@
 {%block main%}
 <div class="inventory">
 
+    <!-- ------------------------- Category table section --------------->
+
     <div class="card height-100">
         <div class="sticky-top bg-white">
             <div class="card-header d-flex justify-content-end align-items-center position-relative">
                 <div class="fs-5 fw-bold position-absolute top-50 start-50 translate-middle">Categories</div>
-                <a href="{%url 'create-category'%}" class="btn btn-success btn-sm d-flex align-items-center">
+                <button type="button" class="btn btn-success btn-sm align-middle" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>                      
-                     <div class="ms-1">Category</div>
-                </a>
+                    </svg> 
+                    Category
+                </button>
             </div>
             <div class="card-header">
                 <div>
@@ -73,6 +75,34 @@
             </ul>
         </div>
     </div>  
+
+
+    <!-- ------------- Category Create modal-------------- -->
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">New Category</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data">
+                    {%csrf_token%}
+                    <label for="{{ form.category_for_label }}" class="form-label">Category Name:</label>
+                    {{ form.category}}
+                    <div class="mt-1 text-danger">
+                        {{ form.category.errors }}
+                    </div>   
+                    <div class="width-100 mt-3 d-flex justify-content-end align-items-center">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-md btn-success ms-2" type="submit">Add</button>
+                    </div>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
 
 </div>
 {%endblock main%}

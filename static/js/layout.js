@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     var currentUrl = window.location.pathname;
-    console.log(currentUrl)
+    // console.log(currentUrl)
     var navItems = document.querySelectorAll('.navItem');
 
 

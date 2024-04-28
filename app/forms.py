@@ -141,7 +141,7 @@ class SupplierForm(forms.ModelForm):
 class PurchaseForm(forms.ModelForm):
     class Meta:
         model = Purchase
-        fields = ['supplier','status','payment_method','paid','shipping']
+        fields = ['status','payment_method','paid', 'payment_status','shipping']
         
 
 #  --------------------------------------- Purchase Lineup Form

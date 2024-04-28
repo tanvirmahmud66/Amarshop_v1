@@ -132,7 +132,7 @@ class Product(models.Model):
         ordering = ['-created_at']
     
     def __str__(self):
-        return self.model
+        return str(self.id)
     
 
 # ============================================================================== Product Img Model
@@ -226,13 +226,13 @@ class Purchase(models.Model):
     status = models.CharField(max_length=50,choices=STATUS)
     payment_status = models.CharField(max_length=50,choices=PAYMENT_STATUS)
     payment_method = models.CharField(max_length=50,choices=PAYMENT_METHOD)
-    grand_total = models.PositiveBigIntegerField()
-    paid = models.PositiveBigIntegerField() 
-    due = models.PositiveBigIntegerField(default=0)
-    date = models.DateTimeField(auto_now_add=True)
-    total_discount = models.IntegerField(default=0,null=True,blank=True)
-    total_tax = models.IntegerField(default=0,null=True,blank=True)
-    shipping = models.IntegerField(default=0,null=True,blank=True)
+    grand_total = models.DecimalField(max_digits=12,decimal_places=2)
+    paid = models.DecimalField(max_digits=12,decimal_places=2)
+    due = models.DecimalField(max_digits=12,decimal_places=2,default=0)
+    date = models.DateField(auto_now_add=True)
+    total_discount = models.DecimalField(max_digits=12,decimal_places=2,default=0,null=True,blank=True)
+    total_tax = models.DecimalField(max_digits=12,decimal_places=2,default=0,null=True,blank=True)
+    shipping = models.DecimalField(max_digits=12,decimal_places=2,default=0,null=True,blank=True)
 
     class Meta:
         ordering = ['-date']
@@ -242,31 +242,36 @@ class Purchase(models.Model):
         super().save(*args, **kwargs)
     
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 
 
 # ============================================================ Purchase Line up
 class PurchaseLineUp(models.Model):
+    author = models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
     product_name = models.CharField(max_length=255,null=True,blank=True)
     category = models.ForeignKey(Categories, on_delete=models.SET_NULL,null=True, blank=True)
     subcategory = models.ForeignKey(SubCategory,on_delete=models.SET_NULL,null=True,blank=True)
     brand = models.ForeignKey(Brand,on_delete=models.SET_NULL,null=True,blank=True)
-    unit_price = models.PositiveIntegerField()
-    quantity = models.PositiveIntegerField()
-    subtotal = models.PositiveBigIntegerField()
-    discount = models.IntegerField(default=0, null=True,blank=True)
-    tax = models.IntegerField(default=0,null=True,blank=True)
+    unit_price = models.DecimalField(max_digits=12,decimal_places=2)
+    quantity = models.IntegerField()
+    subtotal = models.DecimalField(max_digits=12,decimal_places=2)
+    discount = models.DecimalField(max_digits=12,default=0, decimal_places=2,null=True,blank=True)
+    tax = models.DecimalField(max_digits=12, default=0,null=True,blank=True,decimal_places=2)
     purchase_confirm = models.BooleanField(default=False)
     purchase_reference = models.ForeignKey(Purchase,on_delete=models.CASCADE,null=True,blank=True)
 
     def save(self,*args, **kwargs):
-        self.subtotal = (self.unit_price * self.quantity)
+        subtotal = (self.unit_price * self.quantity)
+        discount_amount = subtotal * (self.discount/100)
+        discount_subtotal = subtotal - discount_amount
+        tax_amount = discount_subtotal * (self.tax/100)
+        self.subtotal = discount_subtotal + tax_amount
         super().save(*args,**kwargs)
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 
 

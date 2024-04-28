@@ -1,0 +1,40 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%} Remove Invoice Item | Amar Shop {%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+    <div class="card height-100 d-flex justify-content-center align-items-center">
+        
+        <div class="card shadow-lg width-50">
+            <div class="card-header fw-bold text-danger text-center">Are you sure to remove item from Purchase Invoice List?</div>
+            <form class="card-body" method="post">
+                {%csrf_token%}
+                <div class="text-center">Product: <span class="fw-bold">{{item.product_name}}</span></div>
+                <div class="text-center">Category: <span class="fw-bold">{{item.category}}</span></div>
+                <div class="text-center">Subcategory: <span class="fw-bold">{{item.subcategory}}</span></div>
+                <div class="text-center">Brand: <span class="fw-bold">{{item.brand}}</span></div>
+                <div class="text-center">Quantity: <span class="fw-bold">{{item.quantity}}</span></div>
+                <div class="text-center">
+                    <button class="btn btn-outline-danger">Subtotal: <span class="fw-bold">{{item.subtotal}}</span></button>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="{%url 'new-purchase-invoice'%}" class="btn btn-sm btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                </div>
+            </form>
+        </div>       
+
+    </div>
+
+
+</div>
+{%endblock main%}

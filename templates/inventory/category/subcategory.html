@@ -18,25 +18,36 @@
             <div class="card-header d-flex justify-content-between align-items-center position-relative">
                 <a href="{%url 'category-list'%}" class="btn-back btn-sm">Back</a>
                 <div class="fs-5 fw-bold position-absolute top-50 start-50 translate-middle">{{category}}</div>
-                <a href="{%url 'create-sub' category%}" class="btn btn-success btn-sm">Create New</a>
+                <div class="btn-group">
+                    <button class="btn btn-success btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg> 
+                        Create
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                      <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      ...
+                    </ul>
+                </div>
             </div>
             <div class="card-header">
                 <div>
-                    <form method="get" action="{%url 'category-list'%}" class="d-flex">
-                        <input class="form-control" type="text" name="q" placeholder="search category...">
-                        <button class="btn btn-sm btn-outline-secondary" type="submit">Search</button>
+                    <form method="get" action="{%url 'sub-categories' category%}" class="d-flex">
+                        <input class="form-control" type="text" name="q" placeholder="Search here">
+                        <button class="btn btn-sm btn-secondary d-flex align-items-center ms-2" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" heigth="20px" width="20px">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                            </svg>
+                            <div class="ms-1">Search</div>
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
         <div class="card-body overflow-scroll">
-            <!-- <ul class="list-group">
-                {%for subcategory in subcategories%}
-                <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                    <div class="fw-bold">{{subcategory}}</div>                    
-                </li>
-                {%endfor%}
-            </ul> -->
             <div class="row">
                 {% for subcategory in subcategories %}
                 <a href="#" class="col-3 mb-4">
@@ -50,6 +61,35 @@
             </div>
         </div>
     </div>  
+
+
+
+    <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">New Sub-category</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form method="post" enctype="multipart/form-data">
+                {%csrf_token%}
+                <label for="{{ form.name_for_label }}" class="form-label">Name:</label>
+                {{ form.name}}
+                <div class="mt-1 text-danger">
+                    {{ form.name.errors }}
+                </div>   
+                <div class="width-100 mt-3 d-flex justify-content-end align-items-center">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-md btn-success ms-2" type="submit">Add</button>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 </div>
 {%endblock main%}

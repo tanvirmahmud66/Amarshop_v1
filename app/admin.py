@@ -60,7 +60,7 @@ class PurchaseAdminView(admin.ModelAdmin):
     list_display = ('id','supplier','status','payment_status','grand_total','paid','due','date','total_discount','total_tax','shipping')
 
 class PurchaseLineUpAdminView(admin.ModelAdmin):
-    list_display = ('id','product','product_name','category','subcategory','brand','unit_price','quantity','subtotal','discount','tax','purchase_confirm','purchase_reference')
+    list_display = ('id','author','product','product_name','category','subcategory','brand','unit_price','quantity','subtotal','discount','tax','purchase_confirm','purchase_reference')
 
 
 class InvoiceAdminView(admin.ModelAdmin):

@@ -4,17 +4,19 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import AccessMixin
 from datetime import datetime
+import random
 from django.db.models.base import Model as Model
 from django.db.models.query import QuerySet
 from django.forms import BaseModelForm
 from django.utils import timezone
 from django.shortcuts import redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import DeleteView
 from django.db.models import Q
 from django.db.models import Sum
+from django.views.generic.edit import FormMixin
 from django.db.models.functions import ExtractWeekDay
 from django.views.generic import (
     TemplateView, 
@@ -33,6 +35,7 @@ from .models import (
     Product, 
     Supplier,
     Purchase,
+    PurchaseLineUp,
     Transaction,
     ProductLineUp,
     Sales
@@ -536,154 +539,208 @@ class PurchaseListView(SuperuserRequiredMixin,ListView):
     model = Purchase
     context_object_name = 'purchases'
     template_name = 'inventory/purchase/purchaseList.html'
-    categories = Categories.objects.all()
-    brand = Brand.objects.all()
     supplier = Supplier.objects.all()
     extra_context = {
-        'categories': categories,
-        'brands': brand,
         'suppliers': supplier,
     }
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        search_query = self.request.GET.get('q', None)
-        category = self.request.GET.get('category', None)
-        brand = self.request.GET.get('brand',None)
+        date = self.request.GET.get('date', None)
         supplier = self.request.GET.get('supplier',None)
-        purchase_date = self.request.GET.get('purchase_date',None)
+        status = self.request.GET.get('status',None)
+        payment_status = self.request.GET.get('payment_status',None)
 
-        if search_query:
-            queryset = queryset.filter(model__icontains=search_query)
-
-        if category:
-            queryset = queryset.filter(category=category)
-        if brand:
-            queryset = queryset.filter(brand=brand)
+        if date:
+            date_object = datetime.strptime(date, "%Y-%m-%d").date()
+            queryset = queryset.filter(date_date=date_object)
         if supplier:
             queryset = queryset.filter(supplier=supplier)
-        if purchase_date:
-            date_object = datetime.strptime(purchase_date, "%Y-%m-%d").date()
-            queryset = queryset.filter(Q(purchase_date__date=date_object))
+        if status:
+            queryset = queryset.filter(status=status)
+        if payment_status:
+            queryset = queryset.filter(payment_status=payment_status)
 
-        if category and brand and supplier==None and purchase_date==None:
-            queryset = queryset.filter(
-                Q(category=category) &
-                Q(brand=brand)
-            )
-        elif category and brand==None and supplier and purchase_date==None:
-            queryset = queryset.filter(
-                Q(category=category) &
-                Q(supplier=supplier)
-            )
-        elif category and brand==None and supplier==None and purchase_date:
-            date_object = datetime.strptime(purchase_date, "%Y-%m-%d").date()
-            queryset = queryset.filter(
-                Q(category=category) &
-                Q(purchase_date__date=date_object)
-            )
-        elif category==None and brand and supplier and purchase_date==None:
-            queryset = queryset.filter(
-                Q(brand=brand) &
-                Q(supplier=supplier)
-            )
-        elif category==None and brand and supplier==None and purchase_date:
-            date_object = datetime.strptime(purchase_date, "%Y-%m-%d").date()
-            queryset = queryset.filter(
-                Q(brand=brand) &
-                Q(purchase_date__date=date_object)
-            )
-        elif category==None and brand==None and supplier and purchase_date:
-            date_object = datetime.strptime(purchase_date, "%Y-%m-%d").date()
-            queryset = queryset.filter(
-                Q(supplier=supplier) &
-                Q(purchase_date__date=date_object)
-            )
-        elif category and brand and supplier and purchase_date==None:
-            queryset = queryset.filter(
-                Q(category=category) &
-                Q(brand=brand) &
-                Q(supplier=supplier)
-            )
-        elif category and brand and supplier==None and purchase_date:
-            date_object = datetime.strptime(purchase_date, "%Y-%m-%d").date()
-            queryset = queryset.filter(
-                Q(category=category) &
-                Q(brand=brand) &
-                Q(purchase_date__date=date_object)
-            )
-        elif category and brand==None and supplier and purchase_date:
-            date_object = datetime.strptime(purchase_date, "%Y-%m-%d").date()
-            queryset = queryset.filter(
-                Q(category=category) &
-                Q(supplier=supplier) &
-                Q(purchase_date__date=date_object)
-            )
-        elif category==None and brand and supplier and purchase_date:
-            date_object = datetime.strptime(purchase_date, "%Y-%m-%d").date()
-            queryset = queryset.filter(
-                Q(brand=brand) &
-                Q(supplier=supplier) &
-                Q(purchase_date__date=date_object)
-            )
-        elif category and brand and supplier and purchase_date:
-            date_object = datetime.strptime(purchase_date, "%Y-%m-%d").date()
-            queryset = queryset.filter(
-                Q(category=category) &
-                Q(brand=brand) &
-                Q(supplier=supplier) &
-                Q(purchase_date__date=date_object)
-            )
 
+        if supplier and status and payment_status==None and date==None:
+            queryset = queryset.filter(
+                Q(supplier=supplier) &
+                Q(status=status)
+            )
+        elif supplier and status==None and payment_status and date==None:
+            queryset = queryset.filter(
+                Q(supplier=supplier) &
+                Q(payment_status=payment_status)
+            )
+        elif supplier and status==None and payment_status==None and date:
+            date_object = datetime.strptime(date, "%Y-%m-%d").date()
+            queryset = queryset.filter(
+                Q(supplier=supplier) &
+                Q(date__date=date_object)
+            )
+        elif supplier==None and status and payment_status and date==None:
+            queryset = queryset.filter(
+                Q(status=status) &
+                Q(payment_status=payment_status)
+            )
+        elif supplier==None and status and payment_status==None and date:
+            date_object = datetime.strptime(date, "%Y-%m-%d").date()
+            queryset = queryset.filter(
+                Q(status=status) &
+                Q(date__date=date_object)
+            )
+        elif supplier==None and status==None and payment_status and date:
+            date_object = datetime.strptime(date, "%Y-%m-%d").date()
+            queryset = queryset.filter(
+                Q(payment_status=payment_status) &
+                Q(date__date=date_object)
+            )
+        elif supplier and status and payment_status and date==None:
+            queryset = queryset.filter(
+                Q(supplier=supplier) &
+                Q(status=status) &
+                Q(payment_status=payment_status)
+            )
+        elif supplier and status and payment_status==None and date:
+            date_object = datetime.strptime(date, "%Y-%m-%d").date()
+            queryset = queryset.filter(
+                Q(supplier=supplier) &
+                Q(status=status) &
+                Q(date__date=date_object)
+            )
+        elif supplier and status==None and payment_status and date:
+            date_object = datetime.strptime(date, "%Y-%m-%d").date()
+            queryset = queryset.filter(
+                Q(supplier=supplier) &
+                Q(status=status) &
+                Q(date__date=date_object)
+            )
+        elif supplier==None and status and payment_status and date:
+            date_object = datetime.strptime(date, "%Y-%m-%d").date()
+            queryset = queryset.filter(
+                Q(status=status) &
+                Q(payment_status=payment_status) &
+                Q(date__date=date_object)
+            )
+        elif supplier and status and payment_status and date:
+            date_object = datetime.strptime(date, "%Y-%m-%d").date()
+            queryset = queryset.filter(
+                Q(supplier=supplier) &
+                Q(status=status) &
+                Q(payment_status=payment_status) &
+                Q(date__date=date_object)
+            )
         return queryset
 
 
 # --------------------------------------------------------------- new Purchase view
-class PurchaseCreateView(SuperuserRequiredMixin,CreateView):
+class PurchaseLinpUpView(SuperuserRequiredMixin,CreateView):
+    model = PurchaseLineUp
+    form_class = PurchaseLinuUpForm
+    template_name = 'inventory/purchase/purchaseInvoice.html'
+    success_url = reverse_lazy('new-purchase-invoice')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        invoice_list = self.model.objects.filter(author=self.request.user,purchase_confirm=False)
+        context['invoice_list'] = invoice_list
+        grand_total = invoice_list.aggregate(total_subtotal=Sum('subtotal'))['total_subtotal'] or 0
+        context['grand_total'] = grand_total
+        return context
+    
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user
+        self.object.save()
+        return super().form_valid(form)
+
+# unique_numbers = set()
+# def purchase_code(request):
+#     global unique_numbers
+#     while True:
+#         new_number = random.randint(1000000, 9999999)
+#         if new_number not in unique_numbers:
+#             unique_numbers.add(new_number)
+#             print(new_number)
+#             return JsonResponse({'purchase_code': int(new_number)})
+
+
+def get_filtered_subcategory(request):
+    category_id = request.GET.get('category_id')
+    category = Categories.objects.get(id=category_id)
+    subcategory = SubCategory.objects.filter(category=category).values('id','name')
+    return JsonResponse({'subcategory': list(subcategory)})
+
+
+# --------------------------------------------------------------- new Purchase view
+class PurchaseInvoiceEditView(SuperuserRequiredMixin,UpdateView):
+    model = PurchaseLineUp
+    form_class = PurchaseLinuUpForm
+    template_name = 'inventory/purchase/purchaseInvEdit.html'
+    success_url = reverse_lazy('new-purchase-invoice')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+    
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.save()
+        return super().form_valid(form)
+
+
+# --------------------------------------------------------------- new Purchase view
+class PurchaseInvoiceDeleteView(SuperuserRequiredMixin,DeleteView):
+    model = PurchaseLineUp
+    context_object_name = 'item'
+    template_name = 'inventory/purchase/purchaseInvRemove.html'
+    success_url = reverse_lazy('new-purchase-invoice')
+
+
+# --------------------------------------------------------------- Purchase confirm view
+class PurchaseConfirmView(SuperuserRequiredMixin, CreateView):
     model = Purchase
     form_class = PurchaseForm
-    template_name = 'inventory/purchase/newPurchase.html'
+    template_name = 'inventory/purchase/purchaseConfirm.html'
     success_url = reverse_lazy('purchase-list')
 
-    def form_valid(self, form):
-        category = form.cleaned_data['category']
-        brand = form.cleaned_data['brand']
-        model = form.cleaned_data['model']
-        quantity = form.cleaned_data['quantity']
-        unit_cost = form.cleaned_data['unit_cost']
-        payment_method = form.cleaned_data['payment_method']
-        paid_ammount = form.cleaned_data['paid_ammount']
-        reference = form.cleaned_data['reference']
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['supplier_form'] = SupplierForm()
+        invoice_list = PurchaseLineUp.objects.filter(author=self.request.user, purchase_confirm=False)
+        total_quantity = 0
+        for each in invoice_list:
+            total_quantity += each.quantity
+        grand_total = invoice_list.aggregate(grand_total=Sum('subtotal'))['grand_total'] or 0
+        context['grand_total'] = grand_total
+        context['total_quantity'] = total_quantity
+        return context
 
-        if not Product.objects.filter(category=category, brand=brand, model=model).exists():
-            self.new_product = Product.objects.create(category=category, brand=brand, model=model, cost=unit_cost)
-            self.new_product.save()
-        else:
-            self.new_product = Product.objects.get(category=category, brand=brand, model=model)
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()  # Retrieve the PurchaseForm
+        supplier_form = SupplierForm(request.POST)
+        invoice_list = PurchaseLineUp.objects.filter(author=self.request.user, purchase_confirm=False)
+        grand_total = invoice_list.aggregate(grand_total=Sum('subtotal'))['grand_total'] or 0
+        if form.is_valid() and supplier_form.is_valid():
+            supplier_instance = supplier_form.save()
+            purchase_instance = form.save(commit=False)
+            purchase_instance.supplier = supplier_instance 
+            purchase_instance.grand_total = grand_total
+            purchase_instance.save()
+            for each in invoice_list:
+                new_product = Product.objects.create(
+                    category = each.category,
+                    subcategory = each.subcategory,
+                    brand = each.brand,
+                    product_name = each.product_name,
+                    cost = each.unit_price
+                )
+                new_product.save()
+                each.purchase_confirm = True
+                each.purchase_reference = purchase_instance
+                each.save()
+            return HttpResponseRedirect(self.success_url)
 
-        if Inventory.objects.filter(product=self.new_product).exists():
-            self.get_inventory = Inventory.objects.get(product=self.new_product)
-            self.get_inventory.quantity += quantity
-            self.get_inventory.save()
-        else:
-            self.new_inventory = Inventory.objects.create(
-                product=self.new_product,
-                quantity=quantity,
-                unit_cost=unit_cost,
-            )
-            self.new_inventory.save()
-        
-        self.object = form.save()
-
-        self.new_transaction = Transaction.objects.create(
-            product=self.new_product,
-            transaction_type = "OUT",
-            payment_method=payment_method,
-            amount = paid_ammount,
-            reference = reference,
-            transaction_date = self.object.purchase_date
-        )        
-        return super().form_valid(form)
 
 
 # --------------------------------------------------------------- Purchase details view
@@ -695,8 +752,10 @@ class PurchaseDetailsView(SuperuserRequiredMixin,DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         purchase = self.get_object()
-        supplier = purchase.supplier
-        context['supplier'] = supplier
+        invoice_list = PurchaseLineUp.objects.filter(purchase_reference = purchase, purchase_confirm=True)
+        grand_total = invoice_list.aggregate(grand_total=Sum('subtotal'))['grand_total'] or 0
+        context['invoice_list'] = invoice_list
+        context['grand_total'] = grand_total
         return context
 
 
@@ -711,7 +770,6 @@ class PurchaseUpdateView(SuperuserRequiredMixin,UpdateView):
         return reverse('purchase-details',kwargs={'pk': self.object.pk})
     
 
-
 # --------------------------------------------------------------- Purchase details view
 class PurchaseDeleteView(SuperuserRequiredMixin,DeleteView):
     model = Purchase
@@ -719,7 +777,13 @@ class PurchaseDeleteView(SuperuserRequiredMixin,DeleteView):
     template_name = 'inventory/purchase/purchaseDelete.html'
     success_url = reverse_lazy('purchase-list')
 
-
+    def post(self, request, *args,**kwargs):
+        purchase = self.get_object()
+        invoice = PurchaseLineUp.objects.filter(purchase_reference=purchase)
+        invoice.delete()
+        return super().post(request, *args, **kwargs)
+    
+    
 
 # ==========================================PRODUCT SECTION=======================================
 # ---------------------------------------------------------------product list View
@@ -811,28 +875,21 @@ class ProductDeleteView(SuperuserRequiredMixin,DeleteView):
 
 
 # ==========================================CATEGORY SECTION=======================================
-# ---------------------------------------------------------------Category Create view
-class CreateCategoryView(SuperuserRequiredMixin,CreateView):
+# ---------------------------------------------------------------Category Create view and list view
+class CategoryView(SuperuserRequiredMixin,CreateView):
     model = Categories
     form_class = CategoryForm
-    template_name = 'inventory/category/addCategory.html'
+    template_name = 'inventory/category/category.html'
+    success_url = reverse_lazy('category-list')
 
-    def get_success_url(self):
-        return reverse('category-list')
-
-
-# ---------------------------------------------------------------Categroy list view
-class CategoryListView(SuperuserRequiredMixin,ListView):
-    model = Categories
-    context_object_name = 'categories'
-    template_name = 'inventory/category/allcategory.html'
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        categories = self.model.objects.all()
         search_query = self.request.GET.get('q', None)
         if search_query:
-            queryset = queryset.filter(category__icontains=search_query)
-        return queryset
+            categories = categories.filter(category__icontains=search_query)
+        context['categories'] = categories
+        return context
 
 
 # ---------------------------------------------------------------Category Update view
@@ -852,49 +909,38 @@ class CategoryDeleteView(SuperuserRequiredMixin,DeleteView):
     success_url = reverse_lazy('category-list')
 
 
-# --------------------------------------------------------------- sub category list view
-class SubcategoryListView(SuperuserRequiredMixin,ListView):
+# --------------------------------------------------------------- sub category create and list view
+class SubcategoryView(SuperuserRequiredMixin,CreateView):
     model = SubCategory
+    form_class = SubCategoryForm
     context_object_name = 'subcategories'
     template_name = 'inventory/category/subcategory.html'
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        category = self.kwargs.get('pk',None)
-        queryset = queryset.filter(category__category__icontains=category)
-        return queryset
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        category = self.kwargs.get('pk',None)
-        print(category)
-        context['category'] = category
-        return context
-    
-
-# --------------------------------------------------------------- create subcategory
-class SubCategoryCreateView(SuperuserRequiredMixin, CreateView):
-    model = SubCategory
-    form_class = SubCategoryForm
-    template_name = 'inventory/category/createSubCate.html'
-    
     def get_success_url(self, **kwargs) -> str:
         category = self.kwargs.get('pk',None)
         return reverse('sub-categories', kwargs={'pk': category})
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        category = self.kwargs.get('pk',None)
+        Category = Categories.objects.filter(category=category).first()
+        self.object.category = Category
+        self.object.save()
+        return super().form_valid(form)
+
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         category = self.kwargs.get('pk',None)
-        print(category)
+        category_instance = Categories.objects.filter(category=category).first()
+        subcategories = self.model.objects.filter(category = category_instance)
+        search_query = self.request.GET.get('q', None)
+        if search_query:
+            subcategories = subcategories.filter(name__icontains=search_query)
         context['category'] = category
+        context['subcategories'] = subcategories
         return context
-
-    def form_valid(self, form):
-        category = self.kwargs.get('pk',None)
-        Category = Categories.objects.filter(category__icontains=category)[0]
-        form.instance.category = Category
-        return super().form_valid(form)
-
+    
 
 # ==========================================BRAND SECTION=======================================
 # ---------------------------------------------------------------Brand list view
