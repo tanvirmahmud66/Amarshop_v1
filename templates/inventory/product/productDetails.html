@@ -24,7 +24,7 @@
                 <div class="ms-4 fw-semibold d-flex align-items-center">Product Details</div>
             </div>
             <div class="">
-                <button class="btn btn-outline-success btn-sm me-2">
+                <button type="button" class="btn btn-outline-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-1" height="20px" width="20px">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
                       </svg>                      
@@ -80,23 +80,23 @@
                             {% endfor %}
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
                             </button>
                             <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
                             </button>
                         </div>
-                        <div class="mt-4 d-flex align-items-center justify-content-center">
+                        <div class="w-100 mt-4 overflow-scroll">
                         {% for each in Images %}
-                            <button type="button" class="image-box me-2" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-label="Slide {{ forloop.counter }}">
-                                <img src="{{ each.image.url }}" class="d-block w-100" alt="Image">
+                            <button type="button" class="image-box" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-label="Slide {{ forloop.counter }}">
+                                <img src="{{ each.image.url }}" class="w-100" alt="Image">
                             </button>
                         {% endfor %}
                         </div>
                     {%else%}
-                        <div>
+                        <div class="width-100">
                             <img class="width-100" src="{%static 'media/default_images/No_Product_Image_Available.png'%}"/>
                         </div>
                     {%endif%}
@@ -144,7 +144,7 @@
                     </table>
                 </div>
             </div>
-            <div class="mt-4">
+            <div class="mt-5">
                 <div class="fs-4 fw-medium mb-3">{%if product.description%} Product Description{%else%}No Product Description{%endif%}</div>
                 <div class="lh-lg">{{product.description}}</div>
             </div>
@@ -154,6 +154,27 @@
 </div>
 
 
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Upload Product Image</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" enctype="multipart/form-data">
+            {%csrf_token%}
+            {{form.as_p}}
+            <div class="text-end">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success btn-sm" >Upload</button>     
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
   
 <script>

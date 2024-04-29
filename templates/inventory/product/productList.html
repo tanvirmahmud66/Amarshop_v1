@@ -19,6 +19,10 @@
           Products
         </div>
         <div class="d-flex align-items-center">
+          <form class="d-flex align-items-center me-2" role="search">
+            <input name="q" class="form-control form-control-sm me-2" style="width: 200px;" type="search" placeholder="Search Product or Code" aria-label="Search">
+            <button class="btn btn-outline-secondary btn-sm" type="submit">Search</button>
+          </form>
           <button type="button" class="me-2 btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
               <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
@@ -59,7 +63,7 @@
                         <td class="text-center align-middle">{{product.category}}</td>
                         <td class="text-center align-middle">{{product.subcategory}}</td>
                         <td class="text-center align-middle">{{product.brand}}</td>
-                        <td class="text-center align-middle">{{product.quantity}}</td>
+                        <td class="text-center align-middle fw-bold">{{product.quantity}}</td>
                         <td class="text-center align-middle">
                           <div class="green-btn">Available</div>
                         </td>
@@ -107,33 +111,41 @@
       </div>
       <div class="modal-body">
          <div class="">       
-            <form method="get" action="{%url 'purchase-list'%}" class="">
+            <form method="get" action="{%url 'product-list'%}" class="">
                 <div class="input-group mb-3">
-                    <input type="date" name="date" class="form-control" placeholder="Purchase Date">
-                </div> 
+                  <select name="category" class="form-select" id="id_category">
+                    <option disabled selected>Category</option>
+                    {%for category in categories%}
+                      <option value="{{category.id}}">{{category}}</option>
+                    {%endfor%}
+                  </select>
+                </div>
                 <div class="input-group mb-3">
-                    <select name="supplier" class="form-select" id="inputGroupSelect02">
-                      <option disabled selected>Suppliers</option>
-                      {%for supplier in suppliers%}
-                        <option value="{{supplier.id}}">{{supplier}}</option>
-                      {%endfor%}
-                    </select>
+                  <select name="subcategory" class="form-select" id="id_subcategory">
+                    <option disabled selected>Sub-category</option>
+                  </select>
+                </div>
+                <div class="input-group mb-3">
+                  <select name="brand" class="form-select" id="inputGroupSelect02">
+                    <option disabled selected>brand</option>
+                    {%for each in brands%}
+                      <option value="{{each.id}}">{{each}}</option>
+                    {%endfor%}
+                  </select>
                 </div>
                 <div class="input-group mb-3">
                   <select name="status" class="form-select" id="inputGroupSelect02">
-                    <option disabled selected>Status</option>
-                    <option value="Received">Received</option>
-                    <option value="Ordered">Ordered</option>
-                    <option value="Pending">Pending</option>
+                    <option disabled selected>Stock</option>
+                    <option value="Available">Available</option>
+                    <option value="Low">Low</option>
+                    <option value="Stock_Out">Stock Out</option>
                   </select>
                 </div>
                 <div class="input-group mb-3">
-                  <select name="payment_status" class="form-select" id="inputGroupSelect02">
-                    <option disabled selected>Payment Status</option>
-                    <option value="Paid">Paid</option>
-                    <option value="Due">Due</option>
-                    <option value="Partial">Partial</option>
-                  </select>
+                  <input type="number" name="max_price" class="form-control" placeholder="Max Price">
+                </div>
+                <div class="input-group mb-3">
+                  <input type="number" name="min_price" class="form-control" placeholder="Min Price">
                 </div>
                 <div class="d-flex justify-content-end mt-3">
                   <button type="submit" class="btn btn-outline-primary btn-md input-group-text d-flex align-items-center" for="inputGroupSelect02">
@@ -151,3 +163,28 @@
 </div>
 
 {%endblock main%}
+
+
+{%block script%}
+<script>
+    $(document).ready(function() {
+        $('#id_category').change(function() {
+            var category_id = $('#id_category').val();
+            $.ajax({
+                url: '{% url "get_filtered_subcategory" %}',
+                data: {
+                    'category_id': category_id,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#id_subcategory').empty();
+                    $('#id_subcategory').append($('<option></option>').attr('value',0).text('Sub-category'));
+                    $.each(data.subcategory, function(key, value) {
+                        $('#id_subcategory').append($('<option></option>').attr('value', value.id).text(value.name));
+                    });
+                }
+            });
+        });
+    });
+</script>
+{%endblock script%}

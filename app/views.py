@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import AccessMixin
 from datetime import datetime
 import random
+from django.shortcuts import render
 from django.db.models.base import Model as Model
 from django.db.models.query import QuerySet
 from django.forms import BaseModelForm
@@ -424,116 +425,6 @@ class SalesPayment(SuperuserRequiredMixin, CreateView):
 
 
 
-# ==========================================INVENTORY SECTION=======================================
-# ---------------------------------------------------------------Inventory list view
-class InventoryListView(SuperuserRequiredMixin,ListView):
-    model = Inventory
-    context_object_name = 'inventories'
-    template_name = 'inventory/inventoryList.html'
-    categories_model = Categories.objects.all()
-    brand_model = Brand.objects.all()
-    extra_context = {
-        'categories': categories_model,
-        'brands': brand_model
-    }
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        search_query = self.request.GET.get('q', None)
-        cate = self.request.GET.get('category', None)
-        brand = self.request.GET.get('brand',None)
-        price = self.request.GET.get('price',None)
-        if search_query:
-            queryset = queryset.filter(product__model__icontains=search_query)
-
-        if cate:
-            queryset = queryset.filter(product__category__id=cate)
-        if brand:
-            queryset = queryset.filter(product__brand__id=brand)
-        if price:
-            queryset = queryset.filter(product__price__gte=price)
-
-        if brand and cate and price==None:
-            queryset = queryset.filter(
-                 Q(product__brand__id=brand) &
-                 Q(product__category__id=cate)
-            )
-        elif price and cate and brand==None:
-            queryset = queryset.filter(
-                 Q(product__price__gte=price) &
-                 Q(product__category__id=cate)
-            )
-        elif price and brand and cate==None:
-            queryset = queryset.filter(
-                 Q(product__price__gte=price) &
-                 Q(product__brand__id=brand)
-            )
-        elif price and brand and cate:
-            queryset = queryset.filter(
-                 Q(product__price__gte=price) &
-                 Q(product__brand__id=brand) &
-                 Q(product__category__id=cate)
-            )
-
-        return queryset
-    
-
-
-## ---------------------------------------------------------------Inventory detail view
-class InventoryDetailsView(SuperuserRequiredMixin,DetailView):
-    model = Inventory
-    template_name = 'inventory/inventoryDetails.html'
-    context_object_name = 'inventory'
-
-
-#---------------------------------------------------------------- Inventory Priduct price set
-class InventoryPriceSet(SuperuserRequiredMixin,UpdateView):
-    model = Inventory
-    form_class = InventoryPriceSetForm
-    context_object_name = 'inventory'
-    template_name = 'inventory/inventorySetPrice.html'
-    success_url = reverse_lazy('inventory-list')
-
-    def form_valid(self, form):
-        self.unit_price = form.cleaned_data['unit_price']
-        product = Product.objects.get(id=self.object.product.id)
-        if product:
-            product.price = self.unit_price
-            product.save()
-        return super().form_valid(form)
-
-
-# ---------------------------------------------------------------Inventory Update view
-class InventoryUpdateView(SuperuserRequiredMixin,UpdateView):
-    model = Inventory
-    form_class = InventoryForm
-    context_object_name = 'inventory'
-    template_name = 'inventory/inventoryUpdate.html'
-
-    def get_success_url(self):
-        return reverse('inventory-details',kwargs={'pk': self.object.pk})
-    
-    def form_valid(self, form):
-        self.unit_price = form.cleaned_data['unit_price']
-        self.unit_cost = form.cleaned_data['unit_cost']
-        product = Product.objects.get(id=self.object.product.id)
-        if product:
-            product.cost = self.unit_cost
-            product.price = self.unit_price
-            product.save()
-        return super().form_valid(form)
-
-
-
-# ---------------------------------------------------------------Inventory delete view
-class InventoryDeleteView(SuperuserRequiredMixin,DeleteView):
-    model = Inventory
-    template_name = 'inventory/inventoryDelete.html'
-    context_object_name = 'inventory'
-    success_url = reverse_lazy('inventory-list')
-
-
-
 # ==========================================PURCHASE SECTION=======================================
 #----------------------------------------------------------------Purchase list view
 class PurchaseListView(SuperuserRequiredMixin,ListView):
@@ -802,41 +693,29 @@ class ProductListView(SuperuserRequiredMixin,ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         search_query = self.request.GET.get('q', None)
-        cate = self.request.GET.get('category', None)
+        category = self.request.GET.get('category', None)
+        subcategory = self.request.GET.get('subcategory',None)
         brand = self.request.GET.get('brand',None)
-        price = self.request.GET.get('price',None)
-        if search_query:
-            queryset = queryset.filter(model__icontains=search_query)
+        status = self.request.GET.get('status',None)
+        max_price = self.request.GET.get('max_price',None)
+        min_price = self.request.GET.get('min_price',None)
 
-        if cate:
-            queryset = queryset.filter(category__id=cate)
+        if search_query:
+            queryset = queryset.filter(
+                Q(product_name__icontains=search_query) |
+                Q(product_code=search_query)
+            )
+        if category:
+            queryset = queryset.filter(category__id=category)
+            if subcategory and subcategory != "0":
+                queryset = queryset.filter(subcategory__id=subcategory)
         if brand:
             queryset = queryset.filter(brand__id=brand)
-        if price:
-            queryset = queryset.filter(price__gte=price)
-
-        if brand and cate and price==None:
-            queryset = queryset.filter(
-                 Q(brand__id=brand) &
-                 Q(category__id=cate)
-            )
-        elif price and cate and brand==None:
-            queryset = queryset.filter(
-                 Q(price__gte=price) &
-                 Q(category__id=cate)
-            )
-        elif price and brand and cate==None:
-            queryset = queryset.filter(
-                 Q(price__gte=price) &
-                 Q(brand__id=brand)
-            )
-        elif price and brand and cate:
-            queryset = queryset.filter(
-                 Q(price__gte=price) &
-                 Q(brand__id=brand) &
-                 Q(category__id=cate)
-            )
-            
+        if max_price:
+            queryset = queryset.filter(price__lte=max_price)
+        if min_price:
+            queryset = queryset.filter(price__gte=min_price)
+           
         return queryset
 
 
@@ -861,7 +740,20 @@ class ProductDetailsView(SuperuserRequiredMixin,DetailView):
         product = Product.objects.filter(id=object_id).first()
         product_image = Product_Image.objects.filter(product=product)
         context['Images'] = product_image
+        context['form'] = ProductImageForm()
         return context
+    
+    def post(self, request, *args, **kwargs):
+        form = ProductImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = self.get_object()
+            product_image = form.save(commit=False)
+            product_image.product = product
+            product_image.save()
+            return redirect('product-details', pk=product.pk)  # Redirect to product details page after successful upload
+        else:
+            context = self.get_context_data(form=form)
+            return render(request, self.template_name, context)
 
 # ---------------------------------------------------------------Product update view
 class ProductUpdateView(SuperuserRequiredMixin,UpdateView):
@@ -885,8 +777,10 @@ class ProductDeleteView(SuperuserRequiredMixin,DeleteView):
         context = super().get_context_data(**kwargs)
         object_id = self.kwargs.get('pk',None)
         product = Product.objects.filter(id=object_id).first()
+        print("product",product)
         product_image = Product_Image.objects.filter(product=product).first()
-        context['image'] = product_image
+        print("image:",product_image)
+        context['product_image'] = product_image
         return context
 
 

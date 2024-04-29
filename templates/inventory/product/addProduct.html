@@ -32,3 +32,26 @@
     </div>
 </div>
 {%endblock main%}
+
+{%block script%}
+<script>
+    $(document).ready(function() {
+        $('#id_category').change(function() {
+            var category_id = $('#id_category').val();
+            $.ajax({
+                url: '{% url "get_filtered_subcategory" %}',
+                data: {
+                    'category_id': category_id,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#id_subcategory').empty();
+                    $.each(data.subcategory, function(key, value) {
+                        $('#id_subcategory').append($('<option></option>').attr('value', value.id).text(value.name));
+                    });
+                }
+            });
+        });
+    });
+</script>
+{%endblock script%}

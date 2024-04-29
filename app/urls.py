@@ -22,12 +22,6 @@ from .views import (
     InvoiceRemoveItem,
     SalesPayment,
 
-    InventoryListView,
-    InventoryDetailsView,
-    InventoryPriceSet,
-    InventoryUpdateView,
-    InventoryDeleteView,
-
     PurchaseListView,
     PurchaseLinpUpView,
     get_filtered_subcategory,
@@ -92,12 +86,6 @@ urlpatterns = [
     path('get_filtered_products/', get_filtered_products, name='get_filtered_products'),
     path('sales/new-sale/<str:email>/invoice/<int:pk>/remove-item/',InvoiceRemoveItem.as_view(),name='invoice-remove-item'),
     path('sales/new-sale/<str:pk>/payment/',SalesPayment.as_view(),name='sales-payment'),
-
-    path('inventory/', InventoryListView.as_view(), name='inventory-list'),
-    path('inventory/<int:pk>/details/',InventoryDetailsView.as_view(),name='inventory-details'),
-    path('inventory/<int:pk>/set-price/',InventoryPriceSet.as_view(),name='inventory-setPrice'),
-    path('inventory/<int:pk>/update/',InventoryUpdateView.as_view(),name='inventory-update'),
-    path('inventory/<int:pk>/delete/',InventoryDeleteView.as_view(),name='inventory-delete'),
 
     path('purchase/', PurchaseListView.as_view(),name='purchase-list'),
     path('purchase/new-purchase/invoice-list',PurchaseLinpUpView.as_view(),name='new-purchase-invoice'),

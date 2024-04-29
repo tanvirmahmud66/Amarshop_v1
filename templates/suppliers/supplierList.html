@@ -20,13 +20,13 @@
             <a href="{%url 'create-supplier'%}" class="btn btn-sm btn-success">Add Supplier</a>
         </div>
         <div class="card-header d-flex justify-content-end align-items-center">
-            <form method="get" action="{%url 'inventory-list'%}" class="ms-2 d-flex">
+            <form method="get" class="ms-2 d-flex">
                 <input class="form-control" type="text" name="company" placeholder="Company..">
                 <input class="form-control" type="email" name="email" placeholder="Email">
                 <input class="form-control" type="text" name="person" placeholder="Person..">
                 <input class="form-control" type="text" name="phone" placeholder="Phone..">
                 <button type="submit" class="btn btn-outline-secondary input-group-text" for="inputGroupSelect02">Filter</button>     
-          </form>
+            </form>
         </div>
         <div class="card-body p-0 overflow-scroll">
             <table class="table table-striped">

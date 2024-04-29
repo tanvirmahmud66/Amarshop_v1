@@ -20,9 +20,9 @@
             <div class="card-body">
                 <form method="post" accept="">
                     {% csrf_token %}
-                    {%if image%}
+                    {%if product_image%}
                     <div class="d-flex justify-content-center align-items-center">
-                        <img src="{{image.url}}" height="330px" alt=""/>
+                        <img src="{{product_image.image.url}}" height="220px" alt=""/>
                     </div>
                     {%endif%}
                     <div class="fs-4 fw-bold text-center mb-3">{{product.product_name}}</div>
@@ -46,10 +46,10 @@
                         <img src="{{product.barcode.url}}" height="80px" alt="barcode"/>
                     </div>
                     <div class="d-flex justify-content-center align-items-center mt-3">
-                        <a href="{{request.META.HTTP_REFERER}}" class="btn btn-sm btn-secondary">
+                        <a href="{{request.META.HTTP_REFERER}}" class="btn btn-sm btn-outline-secondary">
                             Cancel
                         </a> 
-                        <button type="submit" class="ms-2 btn btn-sm btn-outline-danger">Delete</button>
+                        <button type="submit" class="ms-2 btn btn-sm btn-danger">Delete</button>
                     </div>
                 </form>
             </div>
