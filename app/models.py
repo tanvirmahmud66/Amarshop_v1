@@ -1,3 +1,9 @@
+import uuid
+import barcode
+from barcode.writer import ImageWriter
+from io import BytesIO
+from django.core.files import File
+from django.urls import reverse
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import BaseUserManager, PermissionsMixin
@@ -112,8 +118,8 @@ class Brand(models.Model):
 
 
 #============================================================================ Product Model
-def product_image_path(instance, filename):
-    return os.path.join('Product_Image', f'{instance.model}', filename)
+def qr__image_path(instance, filename):
+    return os.path.join('Product_barcode', f'{instance.id}_{instance.product_name}', filename)
 
 
 class Product(models.Model):
@@ -122,14 +128,33 @@ class Product(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     product_name = models.CharField(max_length=255)
     product_code = models.CharField(max_length=20,null=True,blank=True)
-    cost = models.PositiveIntegerField(null=True,blank=True)
-    price = models.PositiveIntegerField(null=True,blank=True)
+    quantity = models.PositiveIntegerField(null=True,blank=True)
+    stock_alert = models.PositiveIntegerField(default=5)
+    cost = models.DecimalField(max_digits=12,decimal_places=2,null=True,blank=True)
+    price = models.DecimalField(max_digits=12,decimal_places=2,null=True,blank=True)
     description = models.TextField(null=True, blank=True)
-    productImg = models.ImageField(upload_to=product_image_path, null=True, blank=True,)
+    barcode = models.ImageField(upload_to=qr__image_path, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['-created_at']
+
+    def save(self, *args, **kwargs):
+        if not self.product_code:
+            self.product_code = str(uuid.uuid4())[:7]
+
+        # Generate barcode
+        barcode_value = self.product_code  # Use product code as barcode value
+        code128 = barcode.get_barcode_class('code128')
+        barcode_instance = code128(barcode_value, writer=ImageWriter())
+        
+        # Save barcode image to BytesIO buffer
+        buffer = BytesIO()
+        barcode_instance.write(buffer)
+        filename = f'barcode-{self.id}.png'
+        self.barcode.save(filename, File(buffer), save=False)
+
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return str(self.id)
@@ -137,7 +162,7 @@ class Product(models.Model):
 
 # ============================================================================== Product Img Model
 def Image_path(instance, filename):
-    return os.path.join('Product_Image', f'{instance.product.model}', filename)
+    return os.path.join('Product_Image', f'{instance.product.id}_{instance.product.product_name}', filename)
 
 class Product_Image(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -147,7 +172,7 @@ class Product_Image(models.Model):
         ordering = ['id']
     
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 
 #=============================================================================== supplier model

@@ -33,6 +33,7 @@ from .models import (
     Brand, 
     Inventory, 
     Product, 
+    Product_Image,
     Supplier,
     Purchase,
     PurchaseLineUp,
@@ -854,6 +855,14 @@ class ProductDetailsView(SuperuserRequiredMixin,DetailView):
     context_object_name = 'product'
     template_name = 'inventory/product/productDetails.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        object_id = self.kwargs.get('pk',None)
+        product = Product.objects.filter(id=object_id).first()
+        product_image = Product_Image.objects.filter(product=product)
+        context['Images'] = product_image
+        return context
+
 # ---------------------------------------------------------------Product update view
 class ProductUpdateView(SuperuserRequiredMixin,UpdateView):
     model = Product
@@ -871,6 +880,14 @@ class ProductDeleteView(SuperuserRequiredMixin,DeleteView):
     context_object_name = 'product'
     template_name = 'inventory/product/productDelete.html'
     success_url = reverse_lazy('product-list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        object_id = self.kwargs.get('pk',None)
+        product = Product.objects.filter(id=object_id).first()
+        product_image = Product_Image.objects.filter(product=product).first()
+        context['image'] = product_image
+        return context
 
 
 

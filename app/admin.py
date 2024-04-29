@@ -39,7 +39,7 @@ class BrandAdminView(admin.ModelAdmin):
 
 
 class ProductAdminView(admin.ModelAdmin):
-    list_display = ('id','category','subcategory','brand','product_name','product_code','cost','price','description','productImg','created_at')
+    list_display = ('id','category','subcategory','brand','product_name','product_code','quantity','stock_alert','cost','price','description','barcode','created_at')
 
 class ProductImageAdminView(admin.ModelAdmin):
     list_display = ('id','product','image')

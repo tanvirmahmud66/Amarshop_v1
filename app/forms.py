@@ -116,7 +116,7 @@ class InventoryPriceSetForm(forms.ModelForm):
 class Productform(forms.ModelForm):
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = ['product_name','category','subcategory','brand','quantity','stock_alert','cost','price','description']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 5}), 
         }

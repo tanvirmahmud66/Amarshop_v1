@@ -14,77 +14,140 @@
 <div class="inventory">
 
     <div class="card height-100">
-        <div class="card-header d-flex justify-content-end align-items-center position-relative">
-            <div class="fs-4 fw-bold position-absolute top-50 start-50 translate-middle">Products</div>
-            <a href="{%url 'create-product'%}" class="btn btn-sm btn-success">Create</a>
+      <div class="p-3 bg-white pt-3 pb-3 d-flex justify-content-between align-items-center">
+        <div class="fs-5 pt-2 pb-2 fw-bold d-flex align-items-center">                       
+          Products
         </div>
-        <div class="card-header">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <form method="get" action="{%url 'product-list'%}" class="d-flex">
-                        <input class="form-control" type="text" name="q" placeholder="search product...">
-                        <button class="btn btn-sm btn-outline-secondary" type="submit">Search</button>
-                    </form>
-                </div>
-                <form method="get" action="{%url 'product-list'%}" class="ms-2 d-flex">
-                      <input class="form-control" type="number" name="price" placeholder="price">
-                      <div class="input-group">
-                        <select name="brand" class="form-select" id="inputGroupSelect02">
-                          <option disabled selected>brands...</option>
-                          {%for brand in brands%}
-                            <option value="{{brand.id}}">{{brand}}</option>
-                          {%endfor%}
-                        </select>
-                      </div>
-                      <div class="input-group">
-                        <select name="category" class="form-select" id="inputGroupSelect02">
-                          <option disabled selected>categories...</option>
-                          {%for category in categories%}
-                            <option value="{{category.id}}">{{category}}</option>
-                          {%endfor%}
-                        </select>
-                        <button type="submit" class="btn btn-outline-secondary input-group-text" for="inputGroupSelect02">Filter</button>
-                      </div>                      
-                </form>
-            </div>
+        <div class="d-flex align-items-center">
+          <button type="button" class="me-2 btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+            </svg>                
+            Filter
+          </button>
+          <a href="{%url 'create-product'%}" id="new-invoice" class="btn btn-success btn-sm d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px" class="me-1">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>              
+            New Product
+          </a>
         </div>
-        <div class="card-body p-0 overflow-scroll">
-            <table class="table table-striped">
+      </div>
+
+
+        <div class="card-body pt-0 overflow-scroll">
+            <table class="table table-hover table-sm">
                 <thead class="table-secondary sticky-top">
                     <tr>
-                        <th scope="col" class="ps-3 align-middle">Product Name</th>
-                        <th scope="col" class="ps-3 align-middle">Picture</th>
-                        <th scope="col" class="text-center align-middle">Brand</th>
-                        <th scope="col" class="text-center align-middle">Category</th>
-                        <th scope="col" class="text-center align-middle">Price(BDT)</th>
-                        <th scope="col" class="text-center align-middle">Cost(BDT)</th>
-                        <th scope="col" class="pe-3 text-center align-middle">Details</th>
+                        <th scope="col" class="ps-3 align-middle fw-bold">Code </th>
+                        <th scope="col" class="text-center align-middle fw-bold">Product Name</th>
+                        <th scope="col" class="text-center align-middle fw-bold">Category</th>
+                        <th scope="col" class="text-center align-middle fw-bold">Subcategory</th>
+                        <th scope="col" class="text-center align-middle fw-bold">Brand</th>
+                        <th scope="col" class="text-center align-middle fw-bold">Quantity</th>
+                        <th scope="col" class="text-center align-middle fw-bold">Stock</th>
+                        <th scope="col" class="text-center align-middle fw-bold">Unit Price</th>
+                        <th scope="col" class="text-center align-middle fw-bold">Unit Cost</th>
+                        <th scope="col" class="pe-3 text-end align-middle fw-bold">Details</th>
                     </tr>
                 </thead>
                 <tbody>
                     {%for product in products%}
-                    <tr>
-                        <td class="ps-3 align-middle"><a href="{%url 'product-details' product.id%}" class="text-primary">{{product}}</a></td>
-                        <td class="text-center align-middle">
-                          <div class="overflow-hidden d-flex justify-content-center align-items-center">
-                              {%if product.productImg %}
-                              <img src="{{ product.productImg.url }}" alt="Product Image" width="60">
-                              {%else%}
-                              <img src="{% static 'media/default_images/default_product_image.png' %}" alt="{{ product.model }}">
-                              {%endif%}
-                          </div>
-                      </td>
-                        <td class="text-center align-middle">{{product.brand}}</td>
+                    <tr data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom">
+                        <td class="ps-3 align-middle text-secondary">{{product.product_code}}</td>
+                        <td class="text-center align-middle"><a href="{%url 'product-details' product.id%}" class="text-primary">{{product.product_name}}</a></td>
                         <td class="text-center align-middle">{{product.category}}</td>
-                        <td class="text-center align-middle text-success">{{product.price}}</td>
-                        <td class="text-center align-middle text-danger">{{product.cost}}</td>
-                        <td class="pe-2 text-center align-middle"><a href="{%url 'product-details' product.id%}" class="btn btn-sm btn-outline-secondary">Details</a></td>
-                      </tr>
+                        <td class="text-center align-middle">{{product.subcategory}}</td>
+                        <td class="text-center align-middle">{{product.brand}}</td>
+                        <td class="text-center align-middle">{{product.quantity}}</td>
+                        <td class="text-center align-middle">
+                          <div class="green-btn">Available</div>
+                        </td>
+                        <td class="text-center align-middle">{{product.price}}</td>
+                        <td class="text-center align-middle">{{product.cost}}</td>
+                        <td class="pe-2 text-end align-middle">
+                          <!-- <a href="{%url 'product-details' product.id%}" class="btn btn-sm btn-outline-secondary">Details</a> -->
+                          <div class="btn-group">
+                            <a href="{%url 'product-details' product.id%}" class="btn btn-sm btn-outline-secondary">Details</a>
+                            <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                              <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <a href="{%url 'product-update' product.id %}" class="dropdown-item d-flex align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-1" height="25px" width="25px">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                </svg>                                
+                                Update
+                              </a>
+                              <a href="{%url 'product-delete' product.id %}" class="dropdown-item text-danger d-flex align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-1" height="25px" width="25px">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                </svg>                                
+                                Delete
+                              </a>
+                            </ul>
+                          </div>
+                        </td>
+                    </tr>
                     {%endfor%}
                 </tbody>
             </table>
         </div>
     </div>
-
 </div>
+
+
+<!-- Filter Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Filter Purchase List</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <div class="">       
+            <form method="get" action="{%url 'purchase-list'%}" class="">
+                <div class="input-group mb-3">
+                    <input type="date" name="date" class="form-control" placeholder="Purchase Date">
+                </div> 
+                <div class="input-group mb-3">
+                    <select name="supplier" class="form-select" id="inputGroupSelect02">
+                      <option disabled selected>Suppliers</option>
+                      {%for supplier in suppliers%}
+                        <option value="{{supplier.id}}">{{supplier}}</option>
+                      {%endfor%}
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                  <select name="status" class="form-select" id="inputGroupSelect02">
+                    <option disabled selected>Status</option>
+                    <option value="Received">Received</option>
+                    <option value="Ordered">Ordered</option>
+                    <option value="Pending">Pending</option>
+                  </select>
+                </div>
+                <div class="input-group mb-3">
+                  <select name="payment_status" class="form-select" id="inputGroupSelect02">
+                    <option disabled selected>Payment Status</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Due">Due</option>
+                    <option value="Partial">Partial</option>
+                  </select>
+                </div>
+                <div class="d-flex justify-content-end mt-3">
+                  <button type="submit" class="btn btn-outline-primary btn-md input-group-text d-flex align-items-center" for="inputGroupSelect02">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px" class="me-2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                    </svg>    
+                    Filter
+                  </button>
+                </div>
+            </form>        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {%endblock main%}
