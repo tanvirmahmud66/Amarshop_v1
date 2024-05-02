@@ -9,7 +9,6 @@ from .models import (
     Product,
     Product_Image, 
     Supplier,
-    Transaction,
     Purchase,
     PurchaseLineUp, 
     ProductLineUp, 
@@ -48,10 +47,6 @@ class SupplierAdminView(admin.ModelAdmin):
     list_display = ('id','company_name', 'contact_person', 'email', 'phone_number','address','created_at')
 
 
-class TransactionAdminView(admin.ModelAdmin):
-    list_display = ('id','product','sale','transaction_type','payment_method','amount','reference', 'transaction_date')
-
-
 class PurchaseAdminView(admin.ModelAdmin):
     list_display = ('id','supplier','status','payment_status','grand_total','paid','due','date','total_discount','total_tax','shipping')
 
@@ -76,7 +71,6 @@ admin.site.register(Brand, BrandAdminView)
 admin.site.register(Product,ProductAdminView)
 admin.site.register(Product_Image,ProductImageAdminView)
 admin.site.register(Supplier, SupplierAdminView)
-admin.site.register(Transaction,TransactionAdminView)
 admin.site.register(Purchase, PurchaseAdminView)
 admin.site.register(PurchaseLineUp, PurchaseLineUpAdminView)
 admin.site.register(Sales, SalesAdminView)

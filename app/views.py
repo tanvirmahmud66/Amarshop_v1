@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import AccessMixin
 from datetime import datetime
 import random
+from django.db.models import Count
 from django.shortcuts import render
 from django.db.models.base import Model as Model
 from django.db.models.query import QuerySet
@@ -37,7 +38,6 @@ from .models import (
     Supplier,
     Purchase,
     PurchaseLineUp,
-    Transaction,
     ProductLineUp,
     Sales
 )
@@ -57,7 +57,6 @@ from .forms import (
     ProductLineUpForm,
     PurchaseLineUpform2,
     SalesForm,
-    TransactionForm,
 
 )
 
@@ -155,53 +154,75 @@ class ProfileUpdateView(SuperuserRequiredMixin, UpdateView):
 
 # =========================================DASHBOARD SECTION========================================
 class DashboardView(SuperuserRequiredMixin, TemplateView):
-    template_name = 'dashboard/dashboard.html'
+    template_name = 'inventory/dashboard/dashboard.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         sales_data = Sales.objects.all()
         purchase_data = Purchase.objects.all()
-        # stock_alert_data = Inventory.objects.filter(quantity__lt=5)
-        category_data = Categories.objects.all()
-        brand_data = Brand.objects.all()
+        products = Product.objects.all()
+        purchases = Purchase.objects.all()
+
+        # -----------Sales, Purchase , Debt, Expenses count
         sales = 0
         purchase = 0
         debt = 0
-        top_sale = []
-        top_brand = []
         for each in sales_data:
-            sales += each.amount
+            sales += each.grand_total
         for each in purchase_data:
-            purchase += each.paid_ammount
-            debt += each.due_amount
-        for each in category_data:
-            product_types = ProductLineUp.objects.filter(product__product__category=each, sale_confirm=True)
-            product_count = 0
-            for each_item in product_types:
-                product_count += each_item.quantity
-            top_sale.append({
-                f"{each}": product_count
-            })
-        for each in brand_data:
-            product_types = ProductLineUp.objects.filter(product__product__brand=each, sale_confirm=True)
-            brand_count = 0
-            for each_item in product_types:
-                brand_count += each_item.quantity
-            top_brand.append({
-                f"{each}": brand_count
-            })
-        
-        current_year = timezone.now().year
-        current_month = timezone.now().month
-        monthly_sales_data = Sales.objects.filter(sales_date__year=current_year, sales_date__month=current_month)
-
+            purchase += each.grand_total
+            debt += each.due
         context['sales'] = sales
         context['purchase'] = purchase
         context['debt'] = debt
-        # context['stock_alert'] = stock_alert_data
-        context['top_sale'] = sorted(top_sale, key=lambda x: list(x.values())[0], reverse=True)[:5]
-        context['top_brand'] = sorted(top_brand, key=lambda x: list(x.values())[0], reverse=True)[:5]
-        context['monthly_sales'] = monthly_sales_data
+
+        # ------------ Top Selling Product
+        top_sale = []
+        sale_products = ProductLineUp.objects.filter(sale_confirm=True)
+        subcategories = SubCategory.objects.all()
+        for each in subcategories:
+            filterd_products = sale_products.filter(product__subcategory=each)
+            if filterd_products:
+                product_count = 0
+                for each_item in filterd_products:
+                    product_count += each_item.quantity
+                top_sale.append({
+                    f"{each.category}-{each}": product_count
+                })
+                context['top_sale'] = sorted(top_sale[:5], key=lambda x: list(x.values())[0], reverse=True)[:5]
+
+        # ------------- Stock alert
+        for each in products:
+            stock_alert_product = products.filter(quantity__lt=each.stock_alert)
+        context['stock_alert'] = stock_alert_product
+
+        # ------------- Purchase due
+        purchase_due_table = purchases.filter(due__gt=0)
+        context['purchase_dues'] = purchase_due_table
+
+        # ------------- Top Selling Brand
+        top_brand = []
+        brands = Brand.objects.all()
+        for each in brands:
+            filtered_with_brand = sale_products.filter(product__brand=each)
+            if filtered_with_brand:
+                product_count = 0
+                for each_item in filtered_with_brand:
+                    product_count += each_item.quantity
+                top_brand.append({
+                    f"{each.brand}":product_count
+                })
+                context['top_brand'] = sorted(top_brand[:5], key=lambda x: list(x.values())[0], reverse=True)[:5]
+
+        
+        # ------------ recent sales
+        recent_sales = Sales.objects.all()[:15]
+        recent_purchase = Purchase.objects.all()[:15]
+
+        context['recent_sales'] = recent_sales
+        context['recent_purchase'] = recent_purchase
+
         return context
 
 
@@ -257,6 +278,40 @@ class SalesInvoiceListView(SuperuserRequiredMixin, CreateView):
         obj.quantity = quantity
         obj.subtotal = quantity * product.price
         obj.save()
+        return super().form_valid(form)
+    
+#----------------------------------------------------------------- invoice remove item
+class InvoiceRemoveItem(SuperuserRequiredMixin, DeleteView):
+    model = ProductLineUp
+    context_object_name = 'invoiceItem'
+    template_name = 'inventory/sales/invoiceRemoveItem.html'
+    success_url = reverse_lazy('new-sale-invoice')   
+
+
+
+#----------------------------------------------------------------- invoice remove item
+class InvoiceUpdateItem(SuperuserRequiredMixin, UpdateView):
+    model = ProductLineUp
+    form_class = ProductLineUpForm
+    context_object_name = 'invoiceItem'
+    template_name = 'inventory/sales/invoiceUpdateItem.html'
+    success_url = reverse_lazy('new-sale-invoice')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        obj = self.get_object()
+        initial['product_code'] = obj.product.product_code
+        return initial
+    
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        product_code = form.cleaned_data['product_code']
+        quantity = form.cleaned_data['quantity']
+        product = Product.objects.filter(product_code=product_code).first()
+        self.object.product = product
+        self.object.quantity = quantity
+        self.object.subtotal = product.price * quantity
+        self.object.save()
         return super().form_valid(form)
     
 
@@ -331,84 +386,6 @@ def get_filtered_products(request):
     print(products)
     return JsonResponse({'products': list(products)})
 
-
-#----------------------------------------------------------------- invoice remove item
-class InvoiceRemoveItem(SuperuserRequiredMixin, DeleteView):
-    model = ProductLineUp
-    context_object_name = 'invoiceItem'
-    template_name = 'inventory/sales/invoiceRemoveItem.html'
-
-    def get_success_url(self):
-        return reverse('invoice-list',kwargs={'pk': self.kwargs.get('email', None)})   
-
-
-# --------------------------------------------------------------- Sales payment
-class SalesPayment(SuperuserRequiredMixin, CreateView):
-    model = Transaction
-    form_class = TransactionForm
-    template_name = 'inventory/sales/salesPayment.html'
-
-    def get_success_url(self):
-        return reverse('sales-list')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['email'] = self.kwargs.get('pk', None)
-        product_list = ProductLineUp.objects.filter(token = self.kwargs.get('pk'), sale_confirm=False)
-        context['product_list'] = product_list
-        total_amount = product_list.aggregate(total_amount=Sum('subtotal'))['total_amount']
-        total_quantity = product_list.aggregate(total_quantity=Sum('quantity'))['total_quantity']
-        context['total_amount'] = total_amount
-        context['total_quantity'] = total_quantity
-        pk = self.kwargs.get('pk')
-        if pk:
-            if User.objects.filter(email=pk).exists():
-                context['customer'] = User.objects.filter(email=pk).first()
-            if Customer.objects.filter(email=pk).exists():
-                context['customer'] = Customer.objects.filter(email=pk).first()
-        return context
-    
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-        email = self.kwargs.get('pk',None)
-        obj.transaction_type = "IN"
-        obj.reference = email
-        obj.transaction_date = datetime.now()
-        invoice_list = ProductLineUp.objects.filter(token=email, sale_confirm=False)
-        self.total_product=0
-        for each in invoice_list:
-            self.total_product += each.quantity
-            each.sale_confirm = True
-            inventory = Product.objects.get(product=each.product.product)
-            inventory.quantity -= each.quantity
-            inventory.save()
-            each.save()
-        user = User.objects.filter(email=email).first()
-        if user:
-            self.sale = Sales.objects.create(
-                user=user,
-                amount=obj.amount,
-                product_quantity=self.total_product,
-                sales_date = obj.transaction_date
-            )
-            self.sale.save()
-            obj.sale = self.sale
-            obj.save()
-        else:
-            general_user = Customer.objects.get(email=email)
-            self.sale = Sales.objects.create(
-                general_user=general_user,
-                amount=obj.amount,
-                product_quantity=self.total_product,
-                sales_date = obj.transaction_date
-            )
-            self.sale.save()
-            obj.sale = self.sale
-            obj.save()
-        for each in invoice_list:
-            each.sale_reference = self.sale
-            each.save()
-        return super().form_valid(form)
 
 
 
@@ -816,6 +793,7 @@ class CategoryView(SuperuserRequiredMixin,CreateView):
         search_query = self.request.GET.get('q', None)
         if search_query:
             categories = categories.filter(category__icontains=search_query)
+        categories = categories.annotate(subcategory_count=Count('subcategory'))
         context['categories'] = categories
         return context
 
@@ -865,6 +843,7 @@ class SubcategoryView(SuperuserRequiredMixin,CreateView):
         search_query = self.request.GET.get('q', None)
         if search_query:
             subcategories = subcategories.filter(name__icontains=search_query)
+        subcategories = subcategories.annotate(product_count=Count('product'))
         context['category'] = category
         context['subcategories'] = subcategories
         return context
@@ -920,7 +899,7 @@ class BrandDeleteView(SuperuserRequiredMixin,DeleteView):
 
 # ==========================================REPORT SECTION=======================================
 class ReportView(SuperuserRequiredMixin,TemplateView):
-    template_name = 'reports/report.html'
+    template_name = 'inventory/reports/report.html'
 
 
 
@@ -929,7 +908,7 @@ class ReportView(SuperuserRequiredMixin,TemplateView):
 class SuppliersListView(SuperuserRequiredMixin,ListView):
     model = Supplier
     context_object_name = 'suppliers'
-    template_name = 'suppliers/supplierList.html'
+    template_name = 'inventory/suppliers/supplierList.html'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -947,7 +926,7 @@ class SuppliersListView(SuperuserRequiredMixin,ListView):
 class SupplierCreateView(SuperuserRequiredMixin,CreateView):
     model = Supplier
     form_class = SupplierForm
-    template_name = 'suppliers/supplierCreate.html'
+    template_name = 'inventory/suppliers/supplierCreate.html'
     success_url = reverse_lazy('supplier-list')
 
 # ---------------------------------------------------------------Supplier update view
@@ -955,7 +934,7 @@ class SupplierUpdateView(SuperuserRequiredMixin,UpdateView):
     model = Supplier
     form_class = SupplierForm
     context_object_name = 'supplier'
-    template_name = 'suppliers/supplierUpdate.html'
+    template_name = 'inventory/suppliers/supplierUpdate.html'
     success_url = reverse_lazy('supplier-list')
 
 # ---------------------------------------------------------------Supplier delete view
@@ -963,14 +942,14 @@ class SupplierDeleteView(SuperuserRequiredMixin,DeleteView):
     model = Supplier
     form_class = SupplierForm
     context_object_name = 'supplier'
-    template_name = 'suppliers/supplierDelete.html'
+    template_name = 'inventory/suppliers/supplierDelete.html'
     success_url = reverse_lazy('supplier-list')
 
 
 
 # ==========================================ORDER SECTION=======================================
 class OrderView(SuperuserRequiredMixin,TemplateView):
-    template_name = 'orders/order.html'
+    template_name = 'inventory/orders/order.html'
 
 
 # ==========================================MANAGE STORE SECTION=======================================

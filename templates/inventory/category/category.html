@@ -45,7 +45,7 @@
                 {%for category in categories%}
                 <a href="{%url 'sub-categories' category%}">
                     <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        <div class="fw-bold text-primary">{{category}}</div>
+                        <div class="fw-bold text-primary">{{category}} <span class="ms-2 badge bg-secondary text-white">{{ category.subcategory_count }}</span></div>
                         <div class="btn-group">
                             <a class="btn btn-outline-secondary btn-sm d-flex align-items-center dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">

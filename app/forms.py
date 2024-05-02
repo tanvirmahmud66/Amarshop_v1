@@ -8,7 +8,6 @@ from .models import (
     Categories,
     SubCategory,
     Brand, 
-    Transaction,
     Product, 
     Product_Image,
     Supplier,
@@ -183,25 +182,4 @@ class SalesForm(forms.ModelForm):
         fields = ['paid','payment_status']
 
 
-# ---------------------------------------------- Transaction Form
-class TransactionForm(forms.ModelForm):
 
-    PAYMENT_METHOD = (
-        ('Cash', 'Cash'),
-        ('Credit Card', 'Credit card'),
-        ('Master Card', 'Master Card'),
-        ('Bank Cheque','Bank cheque'),
-        ('Bkash','Bkash'),
-        ('Sure Cash','Sure Cash'),
-        ('DBBL Mobile','DBBL Mobile'),
-        ('DBBL Card','DBBL Card'),
-        ('Nagad','Nagad'),
-        ('UCash', 'UCash'),
-        ('Payoneer','Payoneer'),
-    )
-
-    payment_method = forms.ChoiceField(choices=PAYMENT_METHOD)
-
-    class Meta:
-        model = Transaction
-        fields = ['payment_method','amount']

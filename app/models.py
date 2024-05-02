@@ -194,34 +194,6 @@ class Supplier(models.Model):
         return self.company_name
 
 
-#=================================================================================== Inventory Model
-class Inventory(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE, unique=True)
-    quantity = models.PositiveIntegerField()
-    stock_alert = models.PositiveIntegerField(default=5)
-    unit_price = models.PositiveIntegerField(null=True,blank=True)
-    unit_cost = models.PositiveIntegerField()
-    total_cost = models.PositiveBigIntegerField(null=True, blank=True)
-    valuation = models.PositiveBigIntegerField(null=True, blank=True)
-    profit = models.PositiveBigIntegerField(null=True, blank=True)
-    last_updated = models.DateTimeField(auto_now=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def save(self, *args, **kwargs):
-        self.total_cost = self.quantity * self.unit_cost
-        if self.unit_price:
-            product = Product.objects.get(id=self.product.id)
-            if product:
-                product.price = self.unit_price
-            self.valuation = self.quantity * self.unit_price
-            self.profit = self.valuation - self.total_cost
-        super().save(*args, **kwargs)
-
-    class Meta:
-        ordering = ['-created_at']
-
-    def __str__(self):
-        return self.product.model
 
 
 #============================================================================ Purchase Model
@@ -329,6 +301,10 @@ class Sales(models.Model):
     class Meta:
         ordering = ['-sales_date']
 
+    def save(self, *args, **kwargs):
+        self.due = self.grand_total - self.paid 
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.id}"
 
@@ -348,17 +324,3 @@ class ProductLineUp(models.Model):
         return str(self.id)
 
 
-
-
-#============================================================================== Transaction Model
-class Transaction(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,null=True,blank=True)
-    sale = models.ForeignKey(Sales, on_delete=models.CASCADE,null=True,blank=True)
-    transaction_type = models.CharField(max_length=5)
-    payment_method = models.CharField(max_length=50,)
-    amount = models.PositiveBigIntegerField()
-    reference = models.CharField(max_length=100,null=True,blank=True)
-    transaction_date = models.DateTimeField(null=True, blank=True)
-    
-    def __str__(self):
-        return f"{self.id}"

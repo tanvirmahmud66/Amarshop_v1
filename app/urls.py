@@ -16,10 +16,11 @@ from .views import (
     SalesListView,
     SaleDetailsView,
     SalesInvoiceListView,
+    InvoiceRemoveItem,
+    InvoiceUpdateItem,
     ConfirmSaleView,
     get_filtered_products,
     InvoiceRemoveItem,
-    SalesPayment,
 
     PurchaseListView,
     PurchaseLinpUpView,
@@ -79,11 +80,11 @@ urlpatterns = [
     
     path('sales/',SalesListView.as_view(),name='sales-list'),
     path('sales/new-sale/invoice/',SalesInvoiceListView.as_view(),name='new-sale-invoice'),
+    path('sales/new-sale/invoice/<int:pk>/remove-item/',InvoiceRemoveItem.as_view(),name='sale-invoice-remove'),
+    path('sales/new-sale/invoice/<int:pk>/update-item/',InvoiceUpdateItem.as_view(),name='sale-invoice-update'),
     path('sales/new-sale/confirm-sale/',ConfirmSaleView.as_view(),name='new-sale-confirm'),
     path('sales/<int:pk>/sale-details/',SaleDetailsView.as_view(),name='sale-details'),
     path('get_filtered_products/', get_filtered_products, name='get_filtered_products'),
-    path('sales/new-sale/<str:email>/invoice/<int:pk>/remove-item/',InvoiceRemoveItem.as_view(),name='invoice-remove-item'),
-    path('sales/new-sale/<str:pk>/payment/',SalesPayment.as_view(),name='sales-payment'),
 
     path('purchase/', PurchaseListView.as_view(),name='purchase-list'),
     path('purchase/new-purchase/invoice-list',PurchaseLinpUpView.as_view(),name='new-purchase-invoice'),
