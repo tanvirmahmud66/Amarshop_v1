@@ -8,7 +8,6 @@ from .models import (
     Categories,
     SubCategory,
     Brand, 
-    Inventory, 
     Transaction,
     Product, 
     Product_Image,
@@ -100,18 +99,6 @@ class BrandForm(forms.ModelForm):
         fields = '__all__'
 
 
-# --------------------------------------- Inventory Form
-class InventoryForm(forms.ModelForm):
-    class Meta:
-        model = Inventory
-        fields = '__all__'
-
-class InventoryPriceSetForm(forms.ModelForm):
-    class Meta:
-        model = Inventory
-        fields = ['unit_price']
-
-
 # --------------------------------------- Product Form
 class Productform(forms.ModelForm):
     class Meta:
@@ -148,36 +135,52 @@ class PurchaseForm(forms.ModelForm):
 class PurchaseLinuUpForm(forms.ModelForm):
     class Meta:
         model = PurchaseLineUp
-        fields = ['product','product_name','category','subcategory','brand','unit_price','quantity', 'discount','tax']
+        fields = ['product_name','category','subcategory','brand','unit_price','quantity', 'discount','tax']
 
+
+# ---------------------------------------- Purchase Lineup form 2
+class PurchaseLineUpform2(forms.ModelForm):
+    product_code = forms.CharField(max_length=100)
+
+    class Meta:
+        model = PurchaseLineUp
+        fields = ['product_code','unit_price','quantity','discount','tax']
+    
+    def save(self, commit=True):
+        instance = super(PurchaseLineUpform2, self).save(commit=False)
+        product_code = self.cleaned_data['product_code']
+        product = Product.objects.filter(product_code=product_code).first()
+        instance.product = product
+        if commit:
+            instance.save()
+        return instance
 
 # ------------------------------------------ General Form
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
-        fields = ['name','email','phone','address']
+        fields = ['name','email','phone']
 
 
 # ------------------------------------------ Product Line up form
 class ProductLineUpForm(forms.ModelForm):
-    category = forms.ModelChoiceField(queryset=Categories.objects.all(), required=False)
-    brand = forms.ModelChoiceField(queryset=Brand.objects.all(), required=False)
+    product_code = forms.CharField(max_length=100)
 
     class Meta:
         model = ProductLineUp
-        fields = ['product','quantity']
+        fields = ['product_code','quantity']
 
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['product'].queryset = Inventory.objects.all()
+        self.fields['product_code'].queryset = Product.objects.all()
 
 
 # --------------------------------------------- Sales Form
 class SalesForm(forms.ModelForm):
     class Meta:
         model = Sales
-        fields = '__all__'
+        fields = ['paid','payment_status']
 
 
 # ---------------------------------------------- Transaction Form

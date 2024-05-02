@@ -14,39 +14,33 @@
 <div class="inventory">
 
     <div class="card height-100">
-        <div class="sticky-top bg-white">
-            <div class="card-header d-flex justify-content-end align-items-center position-relative">
-                <div class="fs-5 fw-bold text-center position-absolute top-50 start-50 translate-middle"">Brands</div>
-                <a href="{%url 'create-brand'%}" class="btn btn-success btn-sm d-flex align-items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                    <div class="ms-1">Brand</div> 
-                </a>
+        <div class="p-3 bg-white pt-3 pb-3 d-flex justify-content-between align-items-center">
+            <div class="fs-5 pt-2 pb-2 fw-bold d-flex align-items-center">                       
+              Brand
             </div>
-            <div class="card-header">
-                <div>
-                    <form method="get" action="{%url 'brand-list'%}" class="d-flex">
-                        <input class="form-control" type="text" name="q" placeholder="search brand...">
-                        <button class="btn btn-sm btn-secondary d-flex align-items-center ms-2" type="submit">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" heigth="20px" width="20px">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                            </svg>
-                            <div class="ms-1">Search</div>
-                        </button>
-                    </form>
-                </div>
+            <div class="d-flex align-items-center">
+              <form class="d-flex align-items-center me-2" role="search">
+                <input name="q" class="form-control form-control-sm me-2" style="width: 200px;" type="search" placeholder="Search brand" aria-label="Search">
+                <button class="btn btn-outline-secondary btn-sm" type="submit">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="" height="20px" width="20px">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                  </svg>
+                  Search
+                </button>
+              </form>
+              <button type="button" class="me-2 btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px" class="me-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                  </svg>              
+                  New Brand
+              </button>
             </div>
-        </div>
+          </div>
         <div class="card-body overflow-scroll">
             <ul class="list-group ">
                 {%for brand in brands%}
                 <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                     <div class="fw-bold">{{brand}}</div>
-                    <!-- <div>
-                        <a href="{%url 'brand-update' brand.id %}" class="btn btn-sm btn-outline-success">Update</a>
-                        <a href="{%url 'brand-delete' brand.id %}" class="btn btn-sm btn-danger">Remove</a>
-                    </div> -->
                     <div class="btn-group">
                         <button class="btn btn-outline-secondary btn-sm d-flex align-items-center dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
@@ -77,4 +71,37 @@
     </div>
 
 </div>
+
+
+
+
+
+<!-- Filter Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">New Brand</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form method="post" enctype="multipart/form-data">
+                {%csrf_token%}
+                <label for="{{ form.brand_for_label }}" class="form-label">Brand Name:</label>
+                {{ form.brand}}
+                <div class="mt-1 text-danger">
+                    {{ form.brand.errors }}
+                </div>   
+                <div class="width-100 mt-3 d-flex align-items-center justify-content-end">
+                    <a class="btn btn-md btn-outline-secondary" href="{%url 'brand-list'%}">Cancel</a>
+                    <button class="btn btn-md btn-success ms-2" type="submit">Add</button>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
 {%endblock main%}

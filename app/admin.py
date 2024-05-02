@@ -8,7 +8,6 @@ from .models import (
     Brand, 
     Product,
     Product_Image, 
-    Inventory, 
     Supplier,
     Transaction,
     Purchase,
@@ -44,9 +43,6 @@ class ProductAdminView(admin.ModelAdmin):
 class ProductImageAdminView(admin.ModelAdmin):
     list_display = ('id','product','image')
 
-class InventoryAdminView(admin.ModelAdmin):
-    list_display = ('id', 'product', 'quantity','stock_alert','unit_price','unit_cost','total_cost','valuation','profit','last_updated', 'created_at')
-
 
 class SupplierAdminView(admin.ModelAdmin):
     list_display = ('id','company_name', 'contact_person', 'email', 'phone_number','address','created_at')
@@ -64,11 +60,11 @@ class PurchaseLineUpAdminView(admin.ModelAdmin):
 
 
 class InvoiceAdminView(admin.ModelAdmin):
-    list_display = ('id','token','sale_reference','product','quantity','subtotal','sale_confirm')
+    list_display = ('id','author','product','quantity','subtotal','sale_confirm','sale_reference')
 
 
 class SalesAdminView(admin.ModelAdmin):
-    list_display = ('id','customer','amount','product_quantity','sales_date')
+    list_display = ('id','customer','total_quantity','grand_total','paid','due','status','payment_status','sales_date')
 
 
 admin.site.register(User, UserAdminView)
@@ -79,10 +75,9 @@ admin.site.register(SubCategory, SubCategoryAdminView)
 admin.site.register(Brand, BrandAdminView)
 admin.site.register(Product,ProductAdminView)
 admin.site.register(Product_Image,ProductImageAdminView)
-admin.site.register(Inventory, InventoryAdminView)
 admin.site.register(Supplier, SupplierAdminView)
 admin.site.register(Transaction,TransactionAdminView)
 admin.site.register(Purchase, PurchaseAdminView)
 admin.site.register(PurchaseLineUp, PurchaseLineUpAdminView)
-admin.site.register(ProductLineUp,InvoiceAdminView)
 admin.site.register(Sales, SalesAdminView)
+admin.site.register(ProductLineUp,InvoiceAdminView)

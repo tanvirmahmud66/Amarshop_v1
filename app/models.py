@@ -55,10 +55,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 # =========================================================== Customer
 class Customer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,null=True,blank=True)
-    name = models.CharField(max_length=255, unique=True, null=True,blank=True)
+    name = models.CharField(max_length=255, null=True,blank=True)
     email = models.EmailField(max_length=255, unique=True,null=True, blank=True)
-    phone = models.CharField(max_length=20, unique=True)
-    address = models.TextField(max_length=355,null=True, blank=True)
+    phone = models.CharField(max_length=20)
+    address = models.TextField(max_length=100,null=True, blank=True)
     
     class Meta:
         ordering = ['-id']
@@ -141,7 +141,10 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.product_code:
-            self.product_code = str(uuid.uuid4())[:7]
+            product_uuid = uuid.uuid4()
+            product_number = int(product_uuid.int)
+            product_code = str(product_number)[:7]
+            self.product_code = product_code
 
         # Generate barcode
         barcode_value = self.product_code  # Use product code as barcode value
@@ -304,9 +307,23 @@ class PurchaseLineUp(models.Model):
 
 # ============================================================ Sales Model
 class Sales(models.Model):
+    STATUS = [
+        ('Delivered','Delivered'),
+        ('Ordered','Ordered'),
+        ('Pending','Pending'),
+    ]
+    PAYMENT_STATUS = [
+        ('Paid','Paid'),
+        ('Due','Due'),
+        ('Partial','Partial')
+    ]
     customer = models.ForeignKey(Customer,on_delete=models.CASCADE,null=True, blank=True)
-    amount = models.IntegerField(null=True,blank=True)
-    product_quantity = models.BigIntegerField(null=True,blank=True)
+    total_quantity = models.BigIntegerField(null=True,blank=True)
+    grand_total = models.DecimalField(max_digits=12,decimal_places=2,null=True,blank=True)
+    paid = models.DecimalField(max_digits=12,decimal_places=2,null=True,blank=True)
+    due = models.DecimalField(max_digits=12,decimal_places=2,null=True,blank=True)
+    status = models.CharField(max_length=50,choices=STATUS,null=True,blank=True)
+    payment_status = models.CharField(max_length=50,choices=PAYMENT_STATUS,null=True,blank=True)
     sales_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -319,16 +336,16 @@ class Sales(models.Model):
 
 # ============================================================ Product Line up Model
 class ProductLineUp(models.Model):
-    token = models.CharField(max_length=100, blank=True)
-    product = models.ForeignKey(Inventory, on_delete=models.CASCADE, null=True, blank=True)
+    author = models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.PositiveIntegerField()
-    subtotal = models.PositiveBigIntegerField(null=True,blank=True)
+    subtotal = models.DecimalField(max_digits=12,decimal_places=2,null=True,blank=True)
     sale_confirm = models.BooleanField(default=False)
     sale_reference = models.ForeignKey(Sales, on_delete=models.CASCADE, null=True,blank=True)
     
 
     def __str__(self):
-        return self.product.product.model
+        return str(self.id)
 
 
 

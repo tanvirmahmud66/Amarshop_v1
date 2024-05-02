@@ -15,35 +15,31 @@
 
     <div class="card height-100">
         <div class="sticky-top bg-white">
-            <div class="card-header d-flex justify-content-between align-items-center position-relative">
-                <a href="{%url 'category-list'%}" class="btn-back btn-sm">Back</a>
-                <div class="fs-5 fw-bold position-absolute top-50 start-50 translate-middle">{{category}}</div>
-                <div class="btn-group">
-                    <button class="btn btn-success btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg> 
-                        Create
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                      <span class="visually-hidden">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                      ...
-                    </ul>
+            <div class="p-3 bg-white pt-3 pb-3 d-flex justify-content-between align-items-center">
+                <div class="fs-5 pt-2 pb-2 fw-bold d-flex align-items-center">
+                  <a href="{%url 'category-list'%}" class="btn-back btn-sm fw-light me-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="" height="20px" width="25px">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                      </svg>                      
+                  </a>
+                  {{category}}
                 </div>
-            </div>
-            <div class="card-header">
-                <div>
-                    <form method="get" action="{%url 'sub-categories' category%}" class="d-flex">
-                        <input class="form-control" type="text" name="q" placeholder="Search here">
-                        <button class="btn btn-sm btn-secondary d-flex align-items-center ms-2" type="submit">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" heigth="20px" width="20px">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                            </svg>
-                            <div class="ms-1">Search</div>
+                <div class="d-flex align-items-center">
+                    <form class="d-flex align-items-center me-2" method="get" role="search">
+                        <input name="q" class="form-control form-control-sm me-2" style="width: 200px;" type="search" placeholder="Search sub-category" aria-label="Search">
+                        <button class="btn btn-outline-secondary btn-sm" type="submit">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="" height="20px" width="20px">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                          </svg>
+                          Search
                         </button>
-                    </form>
+                      </form>
+                  <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-success btn-sm d-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px" class="me-1">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>              
+                    Add
+                  </button>
                 </div>
             </div>
         </div>
@@ -51,10 +47,14 @@
             <div class="row">
                 {% for subcategory in subcategories %}
                 <a href="#" class="col-3 mb-4">
-                    <div class="card m-0">
+                    <div class="card m-3 shadow position-relative">
                         <div class="card-body">
                             <div class="text-center fw-bold">{{ subcategory }}</div>
                         </div>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            99+
+                            <span class="visually-hidden">unread messages</span>
+                        </span>
                     </div>
                 </a>
                 {% endfor %}

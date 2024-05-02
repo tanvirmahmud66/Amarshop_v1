@@ -32,7 +32,6 @@ from .models import (
     Categories, 
     SubCategory,
     Brand, 
-    Inventory, 
     Product, 
     Product_Image,
     Supplier,
@@ -45,13 +44,10 @@ from .models import (
 from .forms import (
     AdminCreateForm,
     UserProfilePictureForm,
-    UserUpdateForm,
     ProfileForm,
     CategoryForm,
     SubCategoryForm,
     BrandForm,
-    InventoryForm,
-    InventoryPriceSetForm,
     Productform,
     ProductImageForm,
     SupplierForm,
@@ -59,6 +55,7 @@ from .forms import (
     PurchaseLinuUpForm,
     CustomerForm,
     ProductLineUpForm,
+    PurchaseLineUpform2,
     SalesForm,
     TransactionForm,
 
@@ -164,7 +161,7 @@ class DashboardView(SuperuserRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         sales_data = Sales.objects.all()
         purchase_data = Purchase.objects.all()
-        stock_alert_data = Inventory.objects.filter(quantity__lt=5)
+        # stock_alert_data = Inventory.objects.filter(quantity__lt=5)
         category_data = Categories.objects.all()
         brand_data = Brand.objects.all()
         sales = 0
@@ -201,7 +198,7 @@ class DashboardView(SuperuserRequiredMixin, TemplateView):
         context['sales'] = sales
         context['purchase'] = purchase
         context['debt'] = debt
-        context['stock_alert'] = stock_alert_data
+        # context['stock_alert'] = stock_alert_data
         context['top_sale'] = sorted(top_sale, key=lambda x: list(x.values())[0], reverse=True)[:5]
         context['top_brand'] = sorted(top_brand, key=lambda x: list(x.values())[0], reverse=True)[:5]
         context['monthly_sales'] = monthly_sales_data
@@ -218,24 +215,6 @@ class SalesListView(SuperuserRequiredMixin, ListView):
     context_object_name = 'Sales'
     template_name = 'inventory/sales/salesList.html'
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        search_q = self.request.GET.get('q', None)
-
-        # if search_q:
-        #     queryset = queryset.filter(user__first_name__icontains=search_q)
-            
-        if search_q:
-            queryset = queryset.filter(
-                Q(general_user__first_name__icontains=search_q) |
-                Q(general_user__last_name__icontains=search_q) |
-                Q(general_user__email__icontains=search_q) | 
-                Q(user__first_name__icontains=search_q) |
-                Q(user__last_name__icontains=search_q) |
-                Q(user__email__icontains=search_q) 
-            )
-
-        return queryset
 
 # --------------------------------------------------------------- Sale Details View
 class SaleDetailsView(SuperuserRequiredMixin, DetailView):
@@ -250,88 +229,96 @@ class SaleDetailsView(SuperuserRequiredMixin, DetailView):
         grand_total = product_list.aggregate(total_amount=Sum('subtotal'))['total_amount']
         context['invoice_list'] = product_list
         context['grand_total'] = grand_total
-        if sale_instance.user:
-            transaction = Transaction.objects.filter(sale=sale_instance).first()
-        else:
-            transaction = Transaction.objects.filter(sale=sale_instance).first()
-        context['transaction'] = transaction
         return context
 
 
-# --------------------------------------------------------------- General user create view
-class ClientUserView(SuperuserRequiredMixin, CreateView):
-    model = Customer
-    form_class = CustomerForm
-    template_name = 'inventory/sales/createClientUser.html'
-
-    def get_success_url(self):
-        return reverse('invoice-list',kwargs={'pk': self.object.email})
-    
-    def form_valid(self, form):
-        self.first_name = form.cleaned_data['first_name']
-        self.last_name = form.cleaned_data['last_name']
-        self.email = form.cleaned_data['email']
-        self.phone = form.cleaned_data['phone']
-
-        if self.email:
-            user = User.objects.filter(email=self.email).first()
-            if user:
-                return redirect('invoice-list', pk=self.email)
-        return super().form_valid(form)
-    
-    def form_invalid(self, form):
-        email = form.data['email']
-        general_user = Customer.objects.filter(email=email).first()
-        if general_user:
-            return redirect('invoice-list', pk=form.data['email'])
-        return super().form_invalid(form)
-    
-
-   
-# --------------------------------------------------------------- invoice list
-class InvoiceListView(SuperuserRequiredMixin, ListView):
-    model = ProductLineUp
-    template_name = 'inventory/sales/invoiceList.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        product_list = ProductLineUp.objects.filter(token = self.kwargs.get('pk'), sale_confirm=False)
-        context['product_list'] = product_list
-        total_amount = product_list.aggregate(total_amount=Sum('subtotal'))['total_amount']
-        total_quantity = product_list.aggregate(total_quantity=Sum('quantity'))['total_quantity']
-        context['total_amount'] = total_amount
-        context['total_quantity'] = total_quantity
-        pk = self.kwargs.get('pk')
-        print(pk)
-        if pk:
-            if User.objects.filter(email=pk).exists():
-                context['buyer'] = User.objects.filter(email=pk).first()
-            if Customer.objects.filter(email=pk).exists():
-                context['buyer'] = Customer.objects.filter(email=pk).first()
-        return context
-
-
-# ---------------------------------------------------------------- invoice add item
-class InvoiceAddItem(SuperuserRequiredMixin, CreateView):
+# --------------------------------------------------------------- New Sale invoice View
+class SalesInvoiceListView(SuperuserRequiredMixin, CreateView):
     model = ProductLineUp
     form_class = ProductLineUpForm
-    template_name = 'inventory/sales/invoiceAddItem.html'
+    template_name = 'inventory/sales/salesInvoice.html'
+    success_url = reverse_lazy('new-sale-invoice')
 
-    def get_success_url(self):
-        return reverse('invoice-list',kwargs={'pk': self.kwargs.get('pk', None)})
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['email'] = self.kwargs.get('pk',None)
+        invoice_list = self.model.objects.filter(author=self.request.user, sale_confirm=False)
+        grand_total = invoice_list.aggregate(grand_total=Sum('subtotal'))['grand_total'] or 0
+        context['invoice_list'] = invoice_list
+        context['grand_total'] = grand_total
         return context
     
     def form_valid(self, form):
         obj = form.save(commit=False)
-        token_param = self.kwargs.get('pk', None)
-        obj.token = token_param
-        obj.subtotal = obj.quantity * obj.product.unit_price
+        product_code = form.cleaned_data['product_code']
+        quantity = form.cleaned_data['quantity']
+        product = Product.objects.filter(product_code__icontains=product_code).first()
+        obj.author = self.request.user
+        obj.product = product
+        obj.quantity = quantity
+        obj.subtotal = quantity * product.price
         obj.save()
         return super().form_valid(form)
+    
+
+   
+class ConfirmSaleView(SuperuserRequiredMixin, CreateView):
+    model = Sales
+    form_class = SalesForm
+    template_name = 'inventory/sales/salesInvoiceConfirm.html'
+    success_url = reverse_lazy('sales-list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['customer_form'] = CustomerForm()
+        invoice_list = ProductLineUp.objects.filter(author=self.request.user, sale_confirm=False)
+        total_quantity = 0
+        for each in invoice_list:
+            total_quantity += each.quantity
+        grand_total = invoice_list.aggregate(grand_total=Sum('subtotal'))['grand_total'] or 0
+        context['grand_total'] = grand_total
+        context['total_quantity'] = total_quantity
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        form = self.get_form() 
+        customer_form = CustomerForm(request.POST)
+        invoice_list = ProductLineUp.objects.filter(author=self.request.user, sale_confirm=False)
+        grand_total = invoice_list.aggregate(grand_total=Sum('subtotal'))['grand_total'] or 0
+        email = customer_form.data.get('email')
+        existing_customer = Customer.objects.filter(email=email).first()
+        if form.is_valid() and existing_customer:
+            sale_instance = form.save(commit=False)
+            sale_instance.customer = existing_customer 
+            sale_instance.grand_total = grand_total
+            sale_instance.save()
+            total_quantity = sum(each.quantity for each in invoice_list)
+            for each in invoice_list:
+                product = Product.objects.filter(product_code=each.product.product_code).first()
+                product.quantity -= each.quantity
+                product.save()
+                each.sale_confirm = True
+                each.sale_reference = sale_instance
+                each.save()
+            sale_instance.total_quantity = total_quantity
+            sale_instance.save()
+            return HttpResponseRedirect(self.success_url)
+        else:
+            customer = customer_form.save()
+            sale_instance = form.save(commit=False)
+            sale_instance.customer = customer
+            sale_instance.grand_total = grand_total
+            sale_instance.save()
+            total_quantity = sum(each.quantity for each in invoice_list)
+            for each in invoice_list:
+                product = Product.objects.filter(product_code=each.product.product_code).first()
+                product.quantity -= each.quantity
+                product.save()
+                each.sale_confirm = True
+                each.sale_reference = sale_instance
+                each.save()
+            sale_instance.total_quantity = total_quantity
+            sale_instance.save()
+            return HttpResponseRedirect(self.success_url)
     
 
 def get_filtered_products(request):
@@ -340,7 +327,7 @@ def get_filtered_products(request):
     category = Categories.objects.get(id=category_id)
     brand = Brand.objects.get(id=brand_id)
     print(category_id, brand_id)
-    products = Inventory.objects.filter(product__category=category, product__brand=brand).values('id','product__model')
+    products = Product.objects.filter(product__category=category, product__brand=brand).values('id','product__model')
     print(products)
     return JsonResponse({'products': list(products)})
 
@@ -392,7 +379,7 @@ class SalesPayment(SuperuserRequiredMixin, CreateView):
         for each in invoice_list:
             self.total_product += each.quantity
             each.sale_confirm = True
-            inventory = Inventory.objects.get(product=each.product.product)
+            inventory = Product.objects.get(product=each.product.product)
             inventory.quantity -= each.quantity
             inventory.save()
             each.save()
@@ -532,29 +519,29 @@ class PurchaseLinpUpView(SuperuserRequiredMixin,CreateView):
     template_name = 'inventory/purchase/purchaseInvoice.html'
     success_url = reverse_lazy('new-purchase-invoice')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        invoice_list = self.model.objects.filter(author=self.request.user,purchase_confirm=False)
-        context['invoice_list'] = invoice_list
+    def get(self, request, *args, **kwargs):
+        form = PurchaseLinuUpForm()
+        form2 = PurchaseLineUpform2()
+        invoice_list = PurchaseLineUp.objects.filter(author=self.request.user, purchase_confirm=False)
         grand_total = invoice_list.aggregate(total_subtotal=Sum('subtotal'))['total_subtotal'] or 0
-        context['grand_total'] = grand_total
-        return context
+        return render(request, self.template_name, {'form': form, 'form2': form2, 'invoice_list': invoice_list, 'grand_total': grand_total})
     
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.author = self.request.user
-        self.object.save()
-        return super().form_valid(form)
+    def post(self, request, *args, **kwargs):
+        form = PurchaseLinuUpForm(request.POST)
+        form2 = PurchaseLineUpform2(request.POST)
+        
+        if form.is_valid() and form.cleaned_data.get('product_name'):
+            form.instance.author = self.request.user
+            form.save()
+            return redirect(self.success_url)
+        
+        if form2.is_valid() and form2.cleaned_data.get('product_code'):
+            form2.instance.author = self.request.user
+            form2.save()
+            return redirect(self.success_url)
+        
+        return render(request, self.template_name, {'form': form, 'form2': form2})
 
-# unique_numbers = set()
-# def purchase_code(request):
-#     global unique_numbers
-#     while True:
-#         new_number = random.randint(1000000, 9999999)
-#         if new_number not in unique_numbers:
-#             unique_numbers.add(new_number)
-#             print(new_number)
-#             return JsonResponse({'purchase_code': int(new_number)})
 
 
 def get_filtered_subcategory(request):
@@ -613,21 +600,51 @@ class PurchaseConfirmView(SuperuserRequiredMixin, CreateView):
         supplier_form = SupplierForm(request.POST)
         invoice_list = PurchaseLineUp.objects.filter(author=self.request.user, purchase_confirm=False)
         grand_total = invoice_list.aggregate(grand_total=Sum('subtotal'))['grand_total'] or 0
-        if form.is_valid() and supplier_form.is_valid():
+        email = supplier_form.data.get('email')
+        existing_supplier = Supplier.objects.filter(email=email).first()
+        if form.is_valid() and existing_supplier:
+            supplier_instance = existing_supplier
+            purchase_instance = form.save(commit=False)
+            purchase_instance.supplier = supplier_instance 
+            purchase_instance.grand_total = grand_total
+            purchase_instance.save()
+            for each in invoice_list:
+                if not each.product:
+                    new_product = Product.objects.create(
+                        category = each.category,
+                        subcategory = each.subcategory,
+                        brand = each.brand,
+                        product_name = each.product_name,
+                        cost = each.unit_price,
+                        quantity=each.quantity
+                    )
+                    new_product.save()
+                else:
+                    each.product.quantity += each.quantity
+                    each.product.save()
+                each.purchase_confirm = True
+                each.purchase_reference = purchase_instance
+                each.save()
+            return HttpResponseRedirect(self.success_url)
+        else:
             supplier_instance = supplier_form.save()
             purchase_instance = form.save(commit=False)
             purchase_instance.supplier = supplier_instance 
             purchase_instance.grand_total = grand_total
             purchase_instance.save()
             for each in invoice_list:
-                new_product = Product.objects.create(
-                    category = each.category,
-                    subcategory = each.subcategory,
-                    brand = each.brand,
-                    product_name = each.product_name,
-                    cost = each.unit_price
-                )
-                new_product.save()
+                if not each.product:
+                    new_product = Product.objects.create(
+                        category = each.category,
+                        subcategory = each.subcategory,
+                        brand = each.brand,
+                        product_name = each.product_name,
+                        cost = each.unit_price,
+                        quantity=each.quantity
+                    )
+                    new_product.save()
+                else:
+                    each.product.quantity += each.quantity
                 each.purchase_confirm = True
                 each.purchase_reference = purchase_instance
                 each.save()
@@ -855,17 +872,20 @@ class SubcategoryView(SuperuserRequiredMixin,CreateView):
 
 # ==========================================BRAND SECTION=======================================
 # ---------------------------------------------------------------Brand list view
-class BrandListView(SuperuserRequiredMixin,ListView):
+class BrandListView(SuperuserRequiredMixin,CreateView):
     model = Brand
-    context_object_name = 'brands'
+    form_class = BrandForm
     template_name = 'inventory/brand/brandList.html'
+    success_url = reverse_lazy('brand-list')
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        brand = self.model.objects.all()
         search_query = self.request.GET.get('q', None)
         if search_query:
-            queryset = queryset.filter(brand__icontains=search_query)
-        return queryset
+            brand = brand.filter(brand__icontains=search_query)
+        context['brands'] = brand
+        return context
 
 
 # ---------------------------------------------------------------Brand create view
@@ -910,6 +930,18 @@ class SuppliersListView(SuperuserRequiredMixin,ListView):
     model = Supplier
     context_object_name = 'suppliers'
     template_name = 'suppliers/supplierList.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.GET.get('q', None)
+        if search_query:
+            queryset = queryset.filter(
+                Q(company_name__icontains = search_query) | 
+                Q(contact_person__icontains = search_query) |
+                Q(email__icontains = search_query) |
+                Q(phone_number__icontains = search_query) 
+            )
+        return queryset
 
 # ---------------------------------------------------------------Supplier create view
 class SupplierCreateView(SuperuserRequiredMixin,CreateView):

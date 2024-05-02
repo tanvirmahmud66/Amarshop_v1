@@ -21,7 +21,12 @@
         <div class="d-flex align-items-center">
           <form class="d-flex align-items-center me-2" role="search">
             <input name="q" class="form-control form-control-sm me-2" style="width: 200px;" type="search" placeholder="Search Product or Code" aria-label="Search">
-            <button class="btn btn-outline-secondary btn-sm" type="submit">Search</button>
+            <button class="btn btn-outline-secondary btn-sm" type="submit">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="" height="20px" width="20px">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+              </svg>
+              Search
+            </button>
           </form>
           <button type="button" class="me-2 btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
@@ -40,16 +45,15 @@
 
 
         <div class="card-body pt-0 overflow-scroll">
-            <table class="table table-hover table-sm">
+            <table class="table table-hover table-bordered table-sm">
                 <thead class="table-secondary sticky-top">
                     <tr>
                         <th scope="col" class="ps-3 align-middle fw-bold">Code </th>
-                        <th scope="col" class="text-center align-middle fw-bold">Product Name</th>
-                        <th scope="col" class="text-center align-middle fw-bold">Category</th>
-                        <th scope="col" class="text-center align-middle fw-bold">Subcategory</th>
+                        <th scope="col" class="align-middle fw-bold">Product Name</th>
                         <th scope="col" class="text-center align-middle fw-bold">Brand</th>
-                        <th scope="col" class="text-center align-middle fw-bold">Quantity</th>
+                        <th scope="col" class="text-center align-middle fw-bold">Category</th>
                         <th scope="col" class="text-center align-middle fw-bold">Stock</th>
+                        <th scope="col" class="text-center align-middle fw-bold">Quantity</th>
                         <th scope="col" class="text-center align-middle fw-bold">Unit Price</th>
                         <th scope="col" class="text-center align-middle fw-bold">Unit Cost</th>
                         <th scope="col" class="pe-3 text-end align-middle fw-bold">Details</th>
@@ -59,16 +63,29 @@
                     {%for product in products%}
                     <tr data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom">
                         <td class="ps-3 align-middle text-secondary">{{product.product_code}}</td>
-                        <td class="text-center align-middle"><a href="{%url 'product-details' product.id%}" class="text-primary">{{product.product_name}}</a></td>
-                        <td class="text-center align-middle">{{product.category}}</td>
-                        <td class="text-center align-middle">{{product.subcategory}}</td>
+                        <td class="align-middle"><a href="{%url 'product-details' product.id%}" class="text-primary">{{product.product_name}}</a></td>
                         <td class="text-center align-middle">{{product.brand}}</td>
-                        <td class="text-center align-middle fw-bold">{{product.quantity}}</td>
+                        <td class="text-center align-middle">{{product.category}} / {{product.subcategory}}</td>
                         <td class="text-center align-middle">
                           <div class="green-btn">Available</div>
                         </td>
-                        <td class="text-center align-middle">{{product.price}}</td>
-                        <td class="text-center align-middle">{{product.cost}}</td>
+                        <td class="text-center align-middle fw-bold">{{product.quantity}}</td>
+                        <td class="align-middle text-secondary">
+                          <div class="d-flex align-items-center fw-light">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-1" height="22px" width="22px">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 7.5.415-.207a.75.75 0 0 1 1.085.67V10.5m0 0h6m-6 0h-1.5m1.5 0v5.438c0 .354.161.697.473.865a3.751 3.751 0 0 0 5.452-2.553c.083-.409-.263-.75-.68-.75h-.745M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>                          
+                            {{product.price}}
+                          </div>
+                        </td>
+                        <td class="align-middle text-secondary">
+                          <div class="d-flex align-items-center fw-light">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-1" height="22px" width="22px">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 7.5.415-.207a.75.75 0 0 1 1.085.67V10.5m0 0h6m-6 0h-1.5m1.5 0v5.438c0 .354.161.697.473.865a3.751 3.751 0 0 0 5.452-2.553c.083-.409-.263-.75-.68-.75h-.745M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>                          
+                            {{product.cost}}
+                          </div>
+                        </td>
                         <td class="pe-2 text-end align-middle">
                           <!-- <a href="{%url 'product-details' product.id%}" class="btn btn-sm btn-outline-secondary">Details</a> -->
                           <div class="btn-group">

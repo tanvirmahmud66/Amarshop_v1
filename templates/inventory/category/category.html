@@ -17,30 +17,30 @@
 
     <div class="card height-100">
         <div class="sticky-top bg-white">
-            <div class="card-header d-flex justify-content-end align-items-center position-relative">
-                <div class="fs-5 fw-bold position-absolute top-50 start-50 translate-middle">Categories</div>
-                <button type="button" class="btn btn-success btn-sm align-middle" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg> 
-                    Category
-                </button>
-            </div>
-            <div class="card-header">
-                <div>
-                    <form method="get" action="{%url 'category-list'%}" class="d-flex">
-                        <input class="form-control" type="text" name="q" placeholder="search category...">
-                        <button class="ms-2 btn btn-sm btn-secondary d-flex align-items-center" type="submit">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" heigth="20px" width="20px">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                            </svg>                              
-                            <div class="ms-1">Search</div>
+            <div class="p-3 bg-white pt-3 pb-3 d-flex justify-content-between align-items-center">
+                <div class="fs-5 pt-2 pb-2 fw-bold d-flex align-items-center">
+                  Categories
+                </div>
+                <div class="d-flex align-items-center">
+                    <form class="d-flex align-items-center me-2" method="get" action="{%url 'category-list'%}" role="search">
+                        <input name="q" class="form-control form-control-sm me-2" style="width: 200px;" type="search" placeholder="Search category" aria-label="Search">
+                        <button class="btn btn-outline-secondary btn-sm" type="submit">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="" height="20px" width="20px">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                          </svg>
+                          Search
                         </button>
-                    </form>
+                      </form>
+                  <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-success btn-sm d-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px" class="me-1">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>              
+                    Add Category
+                  </button>
                 </div>
             </div>
         </div>
-        <div class="card-body overflow-scroll">
+        <div class="card-body pt-0 overflow-scroll">
             <ul class="list-group">
                 {%for category in categories%}
                 <a href="{%url 'sub-categories' category%}">

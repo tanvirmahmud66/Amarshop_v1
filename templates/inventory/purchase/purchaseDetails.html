@@ -27,7 +27,7 @@
                 Print
             </button>
         </div>
-        <div class="card-body" id="print-content">
+        <div class="card-body m-4 border shadow-lg p-5" id="print-content">
             <div class="text-center fs-3 fw-bold pb-3">
                 <span class="gedget">Amar</span> Shop
             </div>
@@ -42,19 +42,21 @@
                     <div class="mb-1">Payment Status: <span class="fw-bold">{{purchase.payment_status}}</span></div>
                 </div>
             </div>
-            <hr/>
-            <div class="row">
-                <div class="col">
-                    <div class="fs-5 fw-bold mb-3">Supplier</div>
-                    <div class="mb-1 fw-bold">{{purchase.supplier.company_name}}</div>
+            <hr class="dropdown-divider">
+            <div class="mt-5 d-flex justify-content-between align-items-start">
+                <div class="">
+                    <div class="fs-5 fw-bold">Supplier</div>
+                    <hr class="dropdown-divider">
+                    <div class="mb-1 fw-bold mb-2">{{purchase.supplier.company_name}}</div>
                     <div class="mb-1">{{purchase.supplier.contact_person}}</div>
                     <div class="mb-1 text-primary">{{purchase.supplier.email}}</div>
                     <div class="mb-1">{{purchase.supplier.phone_number}}</div>
                     <div>{{purchase.supplier.address}}</div>
                 </div>
-                <div class="col">
-                    <div class="fs-5 fw-bold mb-3 text-end">Company</div>
-                    <div class="mb-1 text-end fw-bold">Amarshop</div>
+                <div class="">
+                    <div class="fs-5 fw-bold text-end">Company</div>
+                    <hr class="dropdown-divider">
+                    <div class="mb-1 text-end fw-bold mb-2">Amarshop</div>
                     <div class="mb-1 text-end text-primary">amarshop@gmail.com</div>
                     <div class="mb-1 text-end">456-623-623</div>
                     <div class="mb-1 text-end text-primary">www.amarshop.com</div>
@@ -66,7 +68,6 @@
                     <thead class="table-primary">
                         <tr>
                             <th scope="col" class="">Product</th>
-                            <th scope="col" class="text-center">Code</th>
                             <th scope="col" class="text-center">Unit Price</th>
                             <th scope="col" class="text-center">Quantity</th>
                             <th scope="col" class="text-center">Discount</th>
@@ -77,8 +78,13 @@
                     <tbody>
                         {%for each in invoice_list%}
                         <tr>
-                            <td class="">{{each.product_name}}</td>
-                            <td class="text-center">5387462</td>
+                            <td class="">
+                                {%if each.product%}
+                                {{each.product.product_name}}
+                                {%else%}
+                                {{each.product_name}}
+                                {%endif%}
+                            </td>
                             <td class="text-center">{{each.unit_price}}</td>
                             <td class="text-center">{{each.quantity}}</td>
                             <td class="text-center">{{each.discount}}</td>
