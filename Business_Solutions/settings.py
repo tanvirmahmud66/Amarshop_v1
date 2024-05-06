@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'app.apps.AppConfig',
+    'ecommerce.apps.EcommerceConfig',
     'bootstrap5',
 ]
 
@@ -58,7 +59,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'templates',
+            os.path.join(BASE_DIR, 'app', 'templates'),
+            os.path.join(BASE_DIR, 'ecommerce', 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -150,29 +152,17 @@ LOGIN_URL = 'admin-login'
 LOGOUT_REDIRECT_URL = '/login/'
 
 
-# STATIC_URL = '/static/'
-# MEDIA_URL = '/media/'
-
-# STATICFILES_DIRS = [
-#     BASE_DIR / 'static'
-# ]
-
-# STATIC_ROOT = BASE_DIR / 'staticfiles'
-# MEDIA_ROOT = BASE_DIR / 'static/media'
-
-
-
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static')
+# ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "static/media/")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-
+# os.makedirs(os.path.join(BASE_DIR, 'static'), exist_ok=True)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
