@@ -10,41 +10,52 @@
 {%block ecom%}
    
 
-<div class="container p-0 min-h-75">
+<div class="container p-0">
 
-    <div class="card mb-5 shadow">
+    <div class="card shadow mb-5">
         <div class="card-header text-center bg-white fs-5 fw-bold">Checkout</div>
         <div class="row">
             <div class="col">
-                <div class="card-body">
-                    <form>
-                        <div class="form-group mb-3">
-                            <label for="name">Name</label>
-                            <input type="text" class="mt-1 form-control" id="name">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="email">Email</label>
-                            <input type="email" class="mt-1 form-control" id="email">
+                <div class="card-body" id="shipping-info">
+                    <div class="fw-bold mt-2">Shipping Information</div>
+                    <hr class="dropdown-divider"/>
+                    <form id="form">
+                        <div id="user_info">
+                            <div class="form-group mb-3">
+                                <label for="name">Name</label>
+                                <input type="text" class="mt-1 form-control" id="name">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="email">Email</label>
+                                <input type="email" class="mt-1 form-control" id="email">
+                            </div>
                         </div>
                         <!--  -->
                         <div class="form-group mb-3">
                             <label for="address">Address</label>
                             <input type="text" class="mt-1 form-control" id="address">
                         </div>
-                        <div class="form-group mb-3">
-                            <label for="city">City</label>
-                            <input type="text" class="mt-1 form-control" id="city">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="state">State</label>
-                            <input type="text" class="mt-1 form-control" id="state">
+                        <div class="d-flex">
+                            <div class="form-group w-100 mb-3 me-1">
+                                <label for="city">City</label>
+                                <input type="text" class="mt-1 form-control" id="city">
+                            </div>
+                            <div class="form-group w-100 mb-3">
+                                <label for="state">State</label>
+                                <input type="text" class="mt-1 form-control" id="state">
+                            </div>
                         </div>
                         <div class="form-group mb-3">
                             <label for="zip_code">Zip code</label>
                             <input type="text" class="mt-1 form-control" id="zip_code">
                         </div>
-                        <button class="w-100 btn btn-success">Continue</button>
+                        <button type="submit" class="w-100 btn btn-success">Continue</button>
                     </form>
+                </div>
+                <div class="card-body visually-hidden" id="payment-info">
+                    <div class="fw-bold mt-2">Payment</div>
+                    <hr class="dropdown-divider"/>
+                    <button class="btn btn-success w-100" id="make_payment">Make Payment</button> 
                 </div>
             </div>
             <div class="col">
@@ -59,7 +70,7 @@
                         <div class="fw-bold">Order Summary</div>
                     </div>
                     <hr class="dropdown-divider"/>
-                    <div style="height: 480px;" class="overflow-scroll">
+                    <div style="height: 450px;" class="overflow-scroll">
                         <table class="table table-bordered">
                             <thead class="table-warning">
                                 <tr>
@@ -101,4 +112,30 @@
 
 
 
+<script type="text/javascript">
+
+    if (user != "AnonymousUser"){
+        document.getElementById("user_info").innerHTML = ''
+    }
+
+    var formElement = document.getElementById("form")
+   
+    formElement.addEventListener("submit",function(e){
+       e.preventDefault()
+       document.getElementById("shipping-info").classList.add("visually-hidden")
+       document.getElementById("payment-info").classList.remove("visually-hidden")
+    })
+
+    document.getElementById("make_payment").addEventListener("click",function(e){
+        submitFormData()
+    })
+
+    function submitFormData(){
+        console.log("Payment Button Clicked")
+    }
+       
+</script>
+
 {%endblock ecom%}
+
+
