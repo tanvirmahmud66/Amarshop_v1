@@ -6,6 +6,9 @@ urlpatterns = [
     path('products/',views.Products,name='products'),
     path('products/<int:product_code>/<str:product_name>/',views.ProductDetails, name='product-details'),
     path('cart/',views.Cart,name='cart'),
+    path('cart/easy-checkout/',views.Checkout,name='checkout'),
+
     path('login/',views.Login,name='login'),
-    path('singup/',views.Signup,name='signup'),
+    path('registration/',views.Registration,name='registration'),
+    path('forget-password/',views.Forget_password,name='forget-password'),
 ]

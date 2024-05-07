@@ -11,6 +11,18 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.id)
+    
+    @property
+    def get_cart_total(self):
+        orderitems = self.orderitems_set.all()
+        total = sum([item.get_subtotal for item in orderitems])
+        return total
+    
+    @property
+    def get_cart_items(self):
+        orderitems = self.orderitems_set.all()
+        total = sum([item.quantity for item in orderitems])
+        return total
 
 
 class OrderItems(models.Model):
@@ -20,6 +32,10 @@ class OrderItems(models.Model):
 
     def __str__(self):
         return str(self.id)
+    
+    @property
+    def get_subtotal(self):
+        return self.product.price * self.quantity
 
 
 class ShippingAddress(models.Model):

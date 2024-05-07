@@ -11,6 +11,8 @@
     {% load bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
+
+
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,8 +77,8 @@
                         <form class="d-flex">
                             <div class="group">
                                 <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><g><path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path></g></svg>
-                                <input placeholder="Search" type="search" class="search">
-                                <button class="ms-2 btn btn-secondary">Search</button>
+                                <input placeholder="Search" type="search" class="search rounded-pill">
+                                <button class="ms-2 btn btn-outline-secondary rounded-pill">Search</button>
                             </div>
                         </form>
 
@@ -131,9 +133,9 @@
             <section class="">
                 <div class="container p-0 text-center text-md-start mt-5">
                 <!-- Grid row -->
-                <div class="row mt-3">
+                <div class="row p-0">
                     <!-- Grid column -->
-                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                    <div class="col-md-3 col-lg-4 col-xl-3 mb-4">
                     <!-- Content -->
                     <h6 class="text-uppercase fw-bold">Company name</h6>
                     <hr
@@ -195,17 +197,17 @@
                     <!-- Grid column -->
         
                     <!-- Grid column -->
-                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                    <div class="col-md-4 col-lg-3 col-xl-3  mb-md-0 mb-4">
                     <!-- Links -->
-                    <h6 class="text-uppercase fw-bold">Contact</h6>
+                    <h6 class="text-end text-uppercase fw-bold">Contact</h6>
                     <hr
-                        class="mb-4 mt-0 d-inline-block mx-auto"
-                        style="width: 60px; background-color: #7c4dff; height: 2px"
+                        class="mb-4 mt-0"
+                        style="background-color: #7c4dff; height: 2px"
                         />
-                    <p><i class="fas fa-home mr-3"></i> New York, NY 10012, US</p>
-                    <p><i class="fas fa-envelope mr-3"></i> info@example.com</p>
-                    <p><i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
-                    <p><i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
+                    <p class="text-end"><i class="fas fa-home mr-3"></i> New York, NY 10012, US</p>
+                    <p class="text-end"><i class="fas fa-envelope mr-3"></i> info@example.com</p>
+                    <p class="text-end"><i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
+                    <p class="text-end"><i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
                     </div>
                     <!-- Grid column -->
                 </div>

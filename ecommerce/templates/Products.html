@@ -14,25 +14,43 @@
 
     <div class="d-flex justify-content-between align-items-start">
         <div class="w-20 me-2">
-            <div class="card mb-2">Filtering-1</div>
-            <div class="card mb-2">Filtering-2</div>
-            <div class="card mb-2">Filtering-3</div>
-            <div class="card mb-2">Filtering-4</div>
+            <div>Fillter Products</div>
+            <hr class="dropdown-divider">
+            <div class="mt-3">
+                <div class="card shadow mb-2">
+                    <div class="card-body">Filter-1</div>
+                </div>
+                <div class="card shadow mb-2">
+                    <div class="card-body">Filter-1</div>
+                </div>
+                <div class="card shadow mb-2">
+                    <div class="card-body">Filter-1</div>
+                </div>
+                <div class="card shadow mb-2">
+                    <div class="card-body">Filter-1</div>
+                </div>
+                <div class="card shadow mb-2">
+                    <div class="card-body">Filter-1</div>
+                </div>
+            </div>
+            
         </div>
-        <div class="w-80 ps-3">
-            <div>
-                <div class="">
+        <div class="w-80 ps-3 mb-4">
+            <div>All Products</div>
+            <hr class="dropdown-divider mb-2">
+            <div class="mt-3">
+                <div class="ps-2">
                     
                         {%for product in products%}
     
-                        {% if forloop.counter0|divisibleby:3 %}
+                        {% if forloop.counter0|divisibleby:4 %}
                         <div class="row">
                         {% endif %}
-                            <div class="col-md-4 d-flex align-items-center justify-content-center">
+                            <div class="col-md-3 mb-4 d-flex align-items-center justify-content-center">
     
                                 <!-- card -->
                                 <a href="{%url 'product-details' product.product_code product.product_name%}">
-                                    <div class="my-card mb-4">
+                                    <div class="my-card2">
                                         <div class="img">
                                             {% with product.product_image_set.first as img %}
                                                 {% if img %}
@@ -52,23 +70,23 @@
                                                 {{product.price|floatformat:"0"}}
                                             </p> 
                                             <p class="p">{{product.subcategory}} - {{product.brand}}</p> 
-                                            <div class="text-center">
-                                                <a data-product="{{product.id}}" data-action="add" class="update-cart">
-                                                    <button class="mt-2 mb-2 cart-button ps-4 pe-4">
+                                            <div class="p-0 d-flex align-items-center justify-content-center">
+                                                <a data-product="{{product.id}}" data-action="add" class="me-2 update-cart">
+                                                    <button class="mt-2 mb-2 ms-0 cart-button ps-4 pe-4">
                                                         <span class="circle1"></span>
                                                         <span class="circle2"></span>
                                                         <span class="circle3"></span>
                                                         <span class="circle4"></span>
                                                         <span class="circle5"></span>
                                                         <span class="">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" height="25px" width="25px">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" height="18px" width="18px">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                                                             </svg>                                      
                                                             Cart
                                                         </span>    
                                                     </button>
                                                 </a>
-                                                <a href="#">
+                                                <a href="3">
                                                     <button class="mt-2 mb-2 cart-button ps-4 pe-4">
                                                         <span class="circle1"></span>
                                                         <span class="circle2"></span>
@@ -76,17 +94,17 @@
                                                         <span class="circle4"></span>
                                                         <span class="circle5"></span>
                                                         <span class="">
-                                                            Buy Now
+                                                            Buy
                                                         </span>    
                                                     </button>
                                                 </a>
                                             </div>
                                         </div> 
                                     </div>
-                                    </a> 
+                                </a> 
     
                             </div>
-                        {% if forloop.counter|divisibleby:3 or forloop.last %}
+                        {% if forloop.counter|divisibleby:4 or forloop.last %}
                         </div>
                         {% endif %}
                         
