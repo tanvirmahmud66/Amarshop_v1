@@ -11,12 +11,24 @@ from .forms import *
 
 #============================================================= Login View 
 def Login(request):
-    return render(request, 'Login.html',{})
+    error=None
+    if request.method=='POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        print(email, password)
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request,user)
+        else:
+            error = "Invalid Email or Password"
+    return render(request, 'Login.html',{
+        "error":error
+    })
 
 
 def Logout(request):
     logout(request)
-    return redirect('amarshop')
+    return redirect('login')
 
 
 #============================================================= Registration View 
