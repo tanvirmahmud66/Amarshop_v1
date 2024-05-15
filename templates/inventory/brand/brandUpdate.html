@@ -1,0 +1,42 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%} Update Brand Name | Amar Shop {%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+
+    <div class="card height-100">
+        <div class="d-flex flex-column justify-content-center align-items-center height-100">
+            <div class="card border border-success custom-card shadow-lg bg-body-tertiary rounded">
+                <div class="card-header fs-4 text-center text-success">Update Brand</div>
+                <div class="card-body">
+                    <div class="alert alert-success" role="alert">
+                        <a class="alert-link">Note:</a> Brand name will be changed in every dataset in other table.
+                    </div>
+                    <form method="post" enctype="multipart/form-data">
+                        {%csrf_token%}
+                        {{ form.brand}}
+                        <div class="mt-1 text-danger">
+                            {{ form.brand.errors }}
+                        </div>   
+                        <div class="width-100 mt-3 d-flex align-items-center">
+                            <a class="btn btn-sm btn-secondary" href="{%url 'brand-list'%}">Cancel</a>
+                            <button class="btn btn-sm btn-outline-success ms-2" type="submit">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{%endblock main%}

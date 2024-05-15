@@ -10,6 +10,7 @@ urlpatterns = [
     path('cart/easy-checkout/',views.Checkout,name='checkout'),
 
     path('login/',views.Login,name='login'),
+    path('logout/',views.Logout,name='logout'),
     path('registration/',views.Registration,name='registration'),
     path('forget-password/',views.Forget_password,name='forget-password'),
 ]

@@ -76,7 +76,7 @@ class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,null=True,blank=True)
     name = models.CharField(max_length=255, null=True,blank=True)
     email = models.EmailField(max_length=255, unique=True,null=True, blank=True)
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20,null=True, blank=True)
     address = models.TextField(max_length=100,null=True, blank=True)
     profile_pic = models.ImageField(upload_to=customer_image_path, null=True, blank=True)
     

@@ -47,17 +47,6 @@ class AdminCreateForm(UserCreationForm):
         user.save(using=self._db)  # Ensure the proper database is used
         return user
 
-# # ------------------------------------------------- customer create form
-# class CustomerCreateForm(UserCreationForm):
-#     class Meta:
-#         model = User
-#         fields = ('name', 'email', 'phone','address')
-
-#     def save(self, commit=True):
-#         user = super().save()
-#         if commit:
-#             user.save()
-#         return user
 
 # -------------------------------------- Profile Picture Form
 class AdminProfilePictureForm(forms.ModelForm):

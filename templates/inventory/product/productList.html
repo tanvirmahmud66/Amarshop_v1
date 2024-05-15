@@ -1,0 +1,207 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%} All Product | Amar Shop {%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+
+    <div class="card height-100">
+      <div class="p-3 bg-white pt-3 pb-3 d-flex justify-content-between align-items-center">
+        <div class="fs-5 pt-2 pb-2 fw-bold d-flex align-items-center">                       
+          Products
+        </div>
+        <div class="d-flex align-items-center">
+          <form class="d-flex align-items-center me-2" role="search">
+            <input name="q" class="form-control form-control-sm me-2" style="width: 200px;" type="search" placeholder="Search Product or Code" aria-label="Search">
+            <button class="btn btn-outline-secondary btn-sm" type="submit">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="" height="20px" width="20px">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+              </svg>
+              Search
+            </button>
+          </form>
+          <button type="button" class="me-2 btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+            </svg>                
+            Filter
+          </button>
+          <a href="{%url 'create-product'%}" id="new-invoice" class="btn btn-success btn-sm d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px" class="me-1">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>              
+            New Product
+          </a>
+        </div>
+      </div>
+
+
+        <div class="card-body pt-0 overflow-scroll">
+            <table class="table table-hover table-bordered table-sm">
+                <thead class="table-secondary sticky-top">
+                    <tr>
+                        <th scope="col" class="ps-3 align-middle fw-bold">Code </th>
+                        <th scope="col" class="align-middle fw-bold">Product Name</th>
+                        <th scope="col" class="text-center align-middle fw-bold">Brand</th>
+                        <th scope="col" class="text-center align-middle fw-bold">Category</th>
+                        <th scope="col" class="text-center align-middle fw-bold">Stock</th>
+                        <th scope="col" class="text-center align-middle fw-bold">Quantity</th>
+                        <th scope="col" class="text-center align-middle fw-bold">Unit Price</th>
+                        <th scope="col" class="text-center align-middle fw-bold">Unit Cost</th>
+                        <th scope="col" class="pe-3 text-end align-middle fw-bold">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for product in products%}
+                    <tr data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Tooltip on bottom">
+                        <td class="ps-3 align-middle text-secondary">{{product.product_code}}</td>
+                        <td class="align-middle"><a href="{%url 'product-details' product.id%}" class="text-primary">{{product.product_name}}</a></td>
+                        <td class="text-center align-middle">{{product.brand}}</td>
+                        <td class="text-center align-middle">{{product.category}} / {{product.subcategory}}</td>
+                        <td class="text-center align-middle">
+                          <div class="green-btn">Available</div>
+                        </td>
+                        <td class="text-center align-middle fw-bold">{{product.quantity}}</td>
+                        <td class="align-middle text-secondary">
+                          <div class="d-flex align-items-center fw-light">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-1" height="22px" width="22px">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 7.5.415-.207a.75.75 0 0 1 1.085.67V10.5m0 0h6m-6 0h-1.5m1.5 0v5.438c0 .354.161.697.473.865a3.751 3.751 0 0 0 5.452-2.553c.083-.409-.263-.75-.68-.75h-.745M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>                          
+                            {{product.price}}
+                          </div>
+                        </td>
+                        <td class="align-middle text-secondary">
+                          <div class="d-flex align-items-center fw-light">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-1" height="22px" width="22px">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 7.5.415-.207a.75.75 0 0 1 1.085.67V10.5m0 0h6m-6 0h-1.5m1.5 0v5.438c0 .354.161.697.473.865a3.751 3.751 0 0 0 5.452-2.553c.083-.409-.263-.75-.68-.75h-.745M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>                          
+                            {{product.cost}}
+                          </div>
+                        </td>
+                        <td class="pe-2 text-end align-middle">
+                          <!-- <a href="{%url 'product-details' product.id%}" class="btn btn-sm btn-outline-secondary">Details</a> -->
+                          <div class="btn-group">
+                            <a href="{%url 'product-details' product.id%}" class="btn btn-sm btn-outline-secondary">Details</a>
+                            <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                              <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <a href="{%url 'product-update' product.id %}" class="dropdown-item d-flex align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-1" height="25px" width="25px">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                </svg>                                
+                                Update
+                              </a>
+                              <a href="{%url 'product-delete' product.id %}" class="dropdown-item text-danger d-flex align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-1" height="25px" width="25px">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                </svg>                                
+                                Delete
+                              </a>
+                            </ul>
+                          </div>
+                        </td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Filter Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Filter Purchase List</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <div class="">       
+            <form method="get" action="{%url 'product-list'%}" class="">
+                <div class="input-group mb-3">
+                  <select name="category" class="form-select" id="id_category">
+                    <option disabled selected>Category</option>
+                    {%for category in categories%}
+                      <option value="{{category.id}}">{{category}}</option>
+                    {%endfor%}
+                  </select>
+                </div>
+                <div class="input-group mb-3">
+                  <select name="subcategory" class="form-select" id="id_subcategory">
+                    <option disabled selected>Sub-category</option>
+                  </select>
+                </div>
+                <div class="input-group mb-3">
+                  <select name="brand" class="form-select" id="inputGroupSelect02">
+                    <option disabled selected>brand</option>
+                    {%for each in brands%}
+                      <option value="{{each.id}}">{{each}}</option>
+                    {%endfor%}
+                  </select>
+                </div>
+                <div class="input-group mb-3">
+                  <select name="status" class="form-select" id="inputGroupSelect02">
+                    <option disabled selected>Stock</option>
+                    <option value="Available">Available</option>
+                    <option value="Low">Low</option>
+                    <option value="Stock_Out">Stock Out</option>
+                  </select>
+                </div>
+                <div class="input-group mb-3">
+                  <input type="number" name="max_price" class="form-control" placeholder="Max Price">
+                </div>
+                <div class="input-group mb-3">
+                  <input type="number" name="min_price" class="form-control" placeholder="Min Price">
+                </div>
+                <div class="d-flex justify-content-end mt-3">
+                  <button type="submit" class="btn btn-outline-primary btn-md input-group-text d-flex align-items-center" for="inputGroupSelect02">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px" class="me-2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                    </svg>    
+                    Filter
+                  </button>
+                </div>
+            </form>        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%endblock main%}
+
+
+{%block script%}
+<script>
+    $(document).ready(function() {
+        $('#id_category').change(function() {
+            var category_id = $('#id_category').val();
+            $.ajax({
+                url: '{% url "get_filtered_subcategory" %}',
+                data: {
+                    'category_id': category_id,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#id_subcategory').empty();
+                    $('#id_subcategory').append($('<option></option>').attr('value',0).text('Sub-category'));
+                    $.each(data.subcategory, function(key, value) {
+                        $('#id_subcategory').append($('<option></option>').attr('value', value.id).text(value.name));
+                    });
+                }
+            });
+        });
+    });
+</script>
+{%endblock script%}

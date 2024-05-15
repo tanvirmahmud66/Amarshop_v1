@@ -1,0 +1,210 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+{%block title%} Sale Detials | Amar Shop{%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+    <div class="card">
+       
+        <div class="card-header sticky-top bg-white d-flex align-items-center justify-content-between">
+            <a href="{%url 'sales-list'%}" class="btn-back">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="25px">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                </svg>                                    
+            </a>
+            <button class="btn btn-success btn-sm" onclick="printDiv('print-content')">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-1" heigth="25px" width="25px">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z" />
+                </svg>                  
+                Print
+            </button>
+        </div>
+
+        <div class="card-body m-4 border shadow-lg p-5" id="print-content">
+
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="">
+                    <div class="fs-3 fw-bold">
+                        <span class="gedget">Amar</span> Shop
+                    </div>
+                    <div class="fw-light">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="" height="20px" width="20px">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
+                        </svg>
+                        amarshop-v1.onrender.com
+                    </div>
+                </div>
+                <div class="heading text-end">
+                    <div class="fs-5 fw-bold mb-1">Sale Invoice</div>
+                    <div class="fw-light">Invoice No #{{sale.id}}</div>
+                </div>
+            </div>
+
+            <div class="mt-4 fw-bold border-bottom pb-2 d-flex align-items-center justify-content-between">
+                <div>Date of sale - <span class="text-primary">{{sale.sales_date.date}}</span></div>
+                <di>{{sale.sales_date.time}}</di>
+            </div>
+
+            <div class="mt-5 d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="fw-bold fs-5">Customer</div>
+                    <hr class="dropdown-divider">
+                    <div class="fw-bold mb-2">{{sale.customer.name}}</div>
+                    <div class="fw-light mb-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="" height="20" width="20px">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                        </svg>                          
+                        {{sale.customer.email}}
+                    </div>
+                    <div class="fw-light mb-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="" height="20" width="20px">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+                        </svg>                          
+                        {{sale.customer.phone}}
+                    </div>
+                    {%if sale.customer.address%}
+                    <div class="fw-light mb-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="" height="20" width="20px">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                          </svg>                          
+                        {{sale.customer.address}}
+                    </div>
+                    {%endif%}
+                </div>
+                <div>
+                    <div class="fw-bold fs-5 text-end">Company</div>
+                    <hr class="dropdown-divider">
+                    <div class="fw-bold text-end mb-2">
+                        <span class="gedget">Amar</span> Shop
+                    </div>
+                    <div class="fw-light text-end mb-1">
+                        www.amarshop.com
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="" height="20px" width="20px">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
+                        </svg>                         
+                    </div>
+                    <div class="fw-light text-end mb-1">
+                        Dhaka, Bangladesh
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="" height="20" width="20px">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                        </svg>                          
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 border p-4">
+                <div class="mb-3">Dear {{sale.customer.name}},</div>
+                <div class="mb-3">I've provided a breakdown of the costs for the recent work completed below. Kindly make the payment at your earliest convenience. Feel free to reach out if you have any questions.</div>
+                <div class="mb-1">Thank You</div>
+                <div class="fw-bold">
+                    <span class="gedget">Amar</span> Shop
+                </div>
+            </div>
+
+        
+            <div class="mt-5">
+                <table class="table m-0">
+                    <thead class="table-primary table-hover table-sm">
+                        <tr>
+                            <td>Product</td>
+                            <td class="text-center">Quantity</td>
+                            <td class="text-center">Unit Price</td>
+                            <td class="text-end">Subtotal</td>
+                        </tr>
+                    </thead>
+                    <tbody class="table-secondary">
+                        {%for each in invoice_list%}
+                        <tr>
+                            <td>{{each.product.product_name}}</td>
+                            <td class="text-center">{{each.quantity}} px</td>
+                            <td class="d-flex align-items-center justify-content-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-1" height="22px" width="22px">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 7.5.415-.207a.75.75 0 0 1 1.085.67V10.5m0 0h6m-6 0h-1.5m1.5 0v5.438c0 .354.161.697.473.865a3.751 3.751 0 0 0 5.452-2.553c.083-.409-.263-.75-.68-.75h-.745M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                  </svg> 
+                                {{each.product.price}}
+                            </td>
+                            <td class="text-end">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="align-middle" height="22px" width="22px">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 7.5.415-.207a.75.75 0 0 1 1.085.67V10.5m0 0h6m-6 0h-1.5m1.5 0v5.438c0 .354.161.697.473.865a3.751 3.751 0 0 0 5.452-2.553c.083-.409-.263-.75-.68-.75h-.745M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                  </svg> 
+                                {{each.subtotal}}
+                            </td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-end align-items-center">
+                <table class="table table-bordered m-0 width-40">
+                    <tbody class="">
+                        <tr>
+                            <td class="text-start">Discount</td>
+                            <td class="text-end">0.00%</td>
+                        </tr>
+                        <tr>
+                            <td class="text-start">Tax</td>
+                            <td class="text-end">0.00%</td>
+                        </tr>
+                        <tr class="fw-bold">
+                            <td class="text-start">Grand Total</td>
+                            <td class="d-flex align-items-center justify-content-end">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-1" height="22px" width="22px">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 7.5.415-.207a.75.75 0 0 1 1.085.67V10.5m0 0h6m-6 0h-1.5m1.5 0v5.438c0 .354.161.697.473.865a3.751 3.751 0 0 0 5.452-2.553c.083-.409-.263-.75-.68-.75h-.745M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                  </svg> 
+                                {{grand_total|floatformat:"2"}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-start">Shipping</td>
+                            <td class="d-flex align-items-center justify-content-end">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-1" height="22px" width="22px">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 7.5.415-.207a.75.75 0 0 1 1.085.67V10.5m0 0h6m-6 0h-1.5m1.5 0v5.438c0 .354.161.697.473.865a3.751 3.751 0 0 0 5.452-2.553c.083-.409-.263-.75-.68-.75h-.745M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                  </svg> 
+                                0.00
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-start">Paid</td>
+                            <td class="d-flex align-items-center justify-content-end">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-1" height="22px" width="22px">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 7.5.415-.207a.75.75 0 0 1 1.085.67V10.5m0 0h6m-6 0h-1.5m1.5 0v5.438c0 .354.161.697.473.865a3.751 3.751 0 0 0 5.452-2.553c.083-.409-.263-.75-.68-.75h-.745M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                  </svg> 
+                                {{sale.paid}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-start">Due</td>
+                            <td class="text-end text-danger">{{sale.due}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<script>
+    function printDiv(divId) {
+        var printContent = document.getElementById(divId).innerHTML;
+        var originalContent = document.body.innerHTML;
+        document.body.innerHTML = printContent;
+        window.print(printContent);
+        document.body.innerHTML = originalContent;
+    }
+</script>
+
+
+{%endblock main%}

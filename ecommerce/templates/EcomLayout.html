@@ -54,6 +54,8 @@
         }
         const csrftoken = getToken('csrftoken');
 
+        const loginUrl = "{%url 'login'%}"
+
     </script>
 
 </head>
@@ -257,7 +259,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="{%static 'js/cart.js'%}"></script>
+<script type="text/javascript" src="{%static 'js/cart.js'%}"></script>
 <script type="text/javascript" src="{%static 'js/productDetails.js'%}"></script>
 </body>
 </html>

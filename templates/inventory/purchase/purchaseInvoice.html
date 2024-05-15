@@ -1,0 +1,243 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%} Purchase Invoice | Amar Shop {%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+
+    <div class="card height-100">
+        <div class="p-3 bg-white text-center d-flex justify-content-between aling-items-center">
+            <a href="{%url 'purchase-list'%}" class="btn-back">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="25px">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                </svg>                                    
+            </a>
+            <div class="fs-5 d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-2" height="25px" width="25px">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
+                  </svg>                                   
+                Product List
+            </div>
+            {%if invoice_list%}
+            <a href="{%url 'purchase-confirm'%}" class="btn btn-sm btn-success">
+                Make Payment
+            </a>
+            {%else%}
+            <button class="btn btn-sm btn-success" disabled>Make Payment</button>
+            {%endif%}
+        </div>
+        <div class="card-body p-5 overflow-scroll">
+            <table class="table table-bordered table-hover table-sm">
+                <thead class="table-primary sticky-top">
+                    <tr>
+                        <th scope="col" class="text-center align-middle">Opt</th>
+                        <th scope="col" class="text-center align-middle">Product Name</th>
+                        <th scope="col" class="text-center align-middle">Category</th>
+                        <th scope="col" class="text-center align-middle">Brand</th>
+                        <th scope="col" class="text-center align-middle">Unit Price</th>
+                        <th scope="col" class="text-center align-middle">Quantity</th>
+                        <th scope="col" class="text-center align-middle">Discount %</th>
+                        <th scope="col" class="text-center align-middle">Tax %</th>
+                        <th scope="col" class="text-center align-middle">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for each in invoice_list %}
+                    {%if each.product %}
+                    <tr>
+                        <td class="text-center align-middle">
+                            <a href="{%url 'purchase-invoice-remove' each.id%}" class="text-danger">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                </svg>                              
+                            </a>
+                            <a href="{%url 'purchase-invoice-edit' each.id%}" class="text-success">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                  </svg>                                  
+                            </a>
+                        </td>
+                        <td class="text-center align-middle">{{each.product.product_name}}</td>
+                        <td class="text-center align-middle">{{each.product.category}}/{{each.product.subcategory}}</td>
+                        <td class="text-center align-middle">{{each.product.brand}}</td>
+                        <td class="text-center align-middle">{{each.unit_price}}</td>
+                        <td class="text-center align-middle">{{each.quantity}}</td>
+                        <td class="text-center align-middle">{{each.discount}}</td>
+                        <td class="text-center align-middle">{{each.tax}}</td>
+                        <td class="text-center align-middle">{{each.subtotal}}</td>
+                    </tr>
+                    {%else%}
+                    <tr>
+                        <td class="text-center align-middle">
+                            <a href="{%url 'purchase-invoice-remove' each.id%}" class="text-danger">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                </svg>                              
+                            </a>
+                            <a href="{%url 'purchase-invoice-edit' each.id%}" class="text-success">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                  </svg>                                  
+                            </a>
+                        </td>
+                        <td class="text-center align-middle">{{each.product_name}}</td>
+                        <td class="text-center align-middle">{{each.category}}/{{each.subcategory}}</td>
+                        <td class="text-center align-middle">{{each.brand}}</td>
+                        <td class="text-center align-middle">{{each.unit_price}}</td>
+                        <td class="text-center align-middle">{{each.quantity}}</td>
+                        <td class="text-center align-middle">{{each.discount}}</td>
+                        <td class="text-center align-middle">{{each.tax}}</td>
+                        <td class="text-center align-middle">{{each.subtotal}}</td>
+                    </tr>
+                    {%endif%}
+                    {%endfor%}
+                    <tr class="sticky-bottom">
+                        <td class="text-center align-middle p-2">
+                            <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                </svg>                                  
+                                Add Item
+                            </button>
+                        </td>
+                        <td class="text-center align-middle"></td>
+                        <td class="text-center align-middle"></td>
+                        <td class="text-center align-middle"></td>
+                        <td class="text-center align-middle"></td>
+                        <td class="text-center align-middle"></td>
+                        <td class="text-center align-middle"></td>
+                        <td class="text-center align-middle fw-bold">Grand Total</td>
+                        <td class="text-center align-middle fw-bold">{{grand_total|floatformat:"2"}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add Purchase Item</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" enctype="multipart/form-data">
+            {%csrf_token%}
+            <div class="">
+                <button type="button" class="btn btn-primary mb-3" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="25px" width="25px">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>                          
+                    New Product
+                </button>
+                {{form2.as_p}}
+            </div>
+            <div class="d-flex aling-items-center justify-content-end">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success ms-2">Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- second modal -->
+  <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Add Item with Product Details</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post" enctype="multipart/form-data">
+            {%csrf_token%}
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="id_product_name">Product Name:</label>
+                            {{ form.product_name }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_category">Category:</label>
+                            {{ form.category }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_subcategory">Sub Category:</label>
+                            {{ form.subcategory }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="brand">Brand:</label>
+                            {{ form.brand }}
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="id_unit_price">Unit Price:</label>
+                            {{ form.unit_price }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_quantity">Quantity:</label>
+                            {{ form.quantity}}
+                        </div> 
+                        <div class="mb-3">
+                            <label for="id_discount">Discount %:</label>
+                            {{ form.discount }}
+                        </div> 
+                        <div class="mb-3">
+                            <label for="id_tax">Tax %:</label>
+                            {{ form.tax }}
+                        </div>  
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-target="#exampleModal" data-bs-toggle="modal">Back</button>
+            <button type="submit" class="btn btn-success ms-2">Add</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
+{%endblock main%}
+
+
+{%block script%}
+<script>
+    $(document).ready(function() {
+        $('#id_category').change(function() {
+            var category_id = $('#id_category').val();
+            $.ajax({
+                url: '{% url "get_filtered_subcategory" %}',
+                data: {
+                    'category_id': category_id,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#id_subcategory').empty();
+                    $.each(data.subcategory, function(key, value) {
+                        $('#id_subcategory').append($('<option></option>').attr('value', value.id).text(value.name));
+                    });
+                }
+            });
+        });
+    });
+</script>
+{%endblock script%}

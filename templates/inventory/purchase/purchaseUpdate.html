@@ -1,0 +1,39 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%} Update Purchase | Amar Shop {%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+<!-- main body -->
+{%block main%}
+<div class="inventory">
+
+    <div class="card height-100 d-flex justify-content-center align-items-center p-5">
+        
+            
+
+        <div class="width-50">
+            <div class="fs-5 fw-bolder text-center text-success">Update Purchase</div>
+            <div class="card-body">
+                <form method="post" accept="">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="d-flex justify-content-end">
+                        <a href="{%url 'purchase-list'%}" class="btn btn-sm btn-outline-secondary">
+                            Cancel
+                        </a> 
+                        <button type="submit" class="ms-2 btn btn-sm btn-success">Update</button>
+                    </div>
+                </form>                
+            </div>
+        </div>
+        
+    </div>
+
+</div>
+{%endblock main%}

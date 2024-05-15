@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+{%load static%}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {%block title%}
+        {%endblock title%}
+    </title>
+    
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {%block link%}{%endblock link%}
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <link rel="stylesheet" href="{% static 'css/login.css'%}">
+
+</head>
+
+<body>
+
+    <div class="height-full row">
+        <div class="col-5 p-0 m-0 d-flex justify-content-between align-items-center position-relative">
+            <div class="position-absolute top-0 mt-4 branding fs-2 fw-bold"><span class="gedget">Amar</span> Shop</div>
+            <div class="w-full m-5">
+                <div class="text-center">
+                    <div class="mt-5 fs-6 fw-semibold text-success">
+                        {%block heading%}
+                        {%endblock heading%}
+                    </div>
+                </div>
+                <div class="card-body">
+                    {%block form%}
+                    {%endblock form%}
+                </div>
+            </div>
+            <div class="position-absolute bottom-0 text-center w-full mb-2 fw-lighter">Copyright &copy; 2024 Amar Shop. All Rights Reserved.</div>
+        </div>
+
+        <div class="col bg-img d-flex justify-content-center align-items-center">
+            <div class="z-index d-flex flex-column justify-content-center align-items-center">
+                <div class="fw-bold fs-2 text-white">Welcome to <span class="branding fs-2"><span class="gedget">Amar</span> Shop</span></div>
+                <div class="mt-2 text-center fs-5 fw-medium">Admin Panel</div>
+                <div class="mt-2 text-center fs-6 fw-lighter">
+                    {%block text%}
+                    {%endblock text%}
+                </div>
+                <button type="button" class="btn btn-outline-warning mt-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Watch Demo</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Video Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Applicaton Demo</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0 m-0">
+
+
+                <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                      
+                      <div class="carousel-item active">
+                        <img src="{%static 'images/1_login.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/2_signup.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/3_dashboard.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/4_inventory.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/5_inventory_details.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/6_inventory_details.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/7_update_inventory.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/8_delete_inventory.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/9_sales.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/10_new_sale.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/11_new_sale.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/12_new_sale.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/13_new_sale.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/14_purchase.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/15_purchase.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/16_purchase.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/17_purchase.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/18_purchase.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/19_product.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/20_product.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/21_supplier.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/22_category.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/23_category.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/24_brand.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/25_brand.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/26_brand.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/27_profile.png'%}" class="d-block w-100" alt="...">
+                      </div>
+
+                      <div class="carousel-item">
+                        <img src="{%static 'images/28_profile.png'%}" class="d-block w-100" alt="...">
+                      </div>
+                      
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                  </div>
+
+                <!-- <iframe class="w-full" height="550" src="https://www.youtube.com/embed/i9nFG0pAsr4" title="Deque" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+</body>
+</html>
+
+
+
+

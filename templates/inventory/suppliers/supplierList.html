@@ -1,0 +1,116 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+<!-- titile -->
+
+{%block title%}Suppliers | Amar Shop{%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/suppliers.css'%}">
+{%endblock link%}
+
+
+<!-- main body -->
+{%block main%}
+<div class="supplier">
+    
+    <div class="card height-100">
+        <div class="p-3 bg-white pt-3 pb-3 d-flex justify-content-between align-items-center">
+            <div class="fs-5 pt-2 pb-2 fw-bold d-flex align-items-center">
+              Suppliers
+            </div>
+            <div class="d-flex align-items-center">
+                <form class="d-flex align-items-center me-2" method="get" action="{%url 'supplier-list'%}" role="search">
+                    <input name="q" class="form-control form-control-sm me-2" style="width: 200px;" type="search" placeholder="Search Product or Code" aria-label="Search">
+                    <button class="btn btn-outline-secondary btn-sm" type="submit">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="" height="20px" width="20px">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                      </svg>
+                      Search
+                    </button>
+                  </form>
+              <a href="{%url 'create-supplier'%}" id="new-invoice" class="btn btn-success btn-sm d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="20px" width="20px" class="me-1">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>              
+                Add Supplier
+              </a>
+            </div>
+        </div>
+        <div class="card-body pt-0 overflow-scroll">
+            <table class="table table-bordered table-hover table-sm">
+                <thead class="table-secondary sticky-top">
+                    <tr>
+                        <th scope="col" class="ps-3 align-middle">Company Name</th>
+                        <th scope="col" class="text-center align-middle">Email</th>
+                        <th scope="col" class="text-center align-middle">Contact Person</th>
+                        <th scope="col" class="text-center align-middle">Phone No.</th>
+                        <th scope="col" class="text-center align-middle">Address</th>
+                        <th scope="col" class="pe-3 text-center align-middle">Option</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for supplier in suppliers%}
+                    <tr>
+                        <td class="ps-3 align-middle">{{supplier.company_name}}</td>
+                        <td class="align-middle text-center">{{supplier.email}}</td>
+                        <td class="align-middle text-center">{{supplier.contact_person}}</td>
+                        <td class="align-middle text-center">{{supplier.phone_number}}</td>
+                        <td class="align-middle text-center">{{supplier.address}}</td>
+                        <td class="text-center align-middle">
+                            <div class="btn-group">
+                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                  Options
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <a href="{%url 'supplier-update' supplier.id %}" class="dropdown-item d-flex align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-2" height="20px" widht="20px">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                        </svg>
+                                        Update
+                                    </a>
+                                    <a href="{%url 'supplier-delete' supplier.id %}" class="dropdown-item d-flex align-items-center text-danger">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="me-2" height="20px" widht="20px">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                          </svg>
+                                          
+                                        Delete
+                                    </a>    
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Filter Supplier</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="get" action="{%url 'supplier-list'%}">
+            <div class="input-group mb-3">
+                <input type="" name="date" class="form-control" placeholder="Purchase Date">
+              </div> 
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{%endblock main%}

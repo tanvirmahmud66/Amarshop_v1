@@ -1,0 +1,27 @@
+{% extends "Layout.html" %}
+{% load static %}
+
+{%block title%} Update Profile | Amar Shop{%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/inventory.css'%}">
+{%endblock link%}
+
+
+<!-- main body -->
+{%block main%}
+
+<div class="card height-100">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {%csrf_token%}
+            {{form.as_p}}
+            <div>
+                <a href="{%url 'profile' request.user.id%}" class="btn btn-sm btn-outline-secondary">Cancel</a>
+                <button class="btn btn-sm btn-success">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{%endblock main%}

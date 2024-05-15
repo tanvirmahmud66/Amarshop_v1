@@ -1,8 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 import json
 from app.models import User, Customer, Product, Product_Image
 from .models import *
+from .forms import *
 # Create your views here.
 
 
@@ -11,9 +14,30 @@ def Login(request):
     return render(request, 'Login.html',{})
 
 
+def Logout(request):
+    logout(request)
+    return redirect('amarshop')
+
+
 #============================================================= Registration View 
 def Registration(request):
-    return render(request, 'Registration.html',{})
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(email=email, password=password)
+            customer = Customer.objects.create(user=user, email=email)
+            customer.save()
+            print(user)
+            login(request,user)
+            return redirect('amarshop')  # You can redirect to any URL you prefer after successful signup
+    else:
+        form = SignUpForm()
+    return render(request, 'Registration.html',{
+        "form": form
+    })
 
 
 #============================================================= Forget Password View 
