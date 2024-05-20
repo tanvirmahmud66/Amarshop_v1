@@ -32,8 +32,6 @@ class UserManager(BaseUserManager):
         return user
 
 
-def profile_image_path(instance, filename):
-    return os.path.join('Admin_profile_images', f'{instance.email}', filename)
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
@@ -41,7 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=255, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    profile_pic = models.ImageField(upload_to=profile_image_path, null=True, blank=True)
+    
 
     objects = UserManager()
 
@@ -50,34 +48,43 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-    
+
+
+
+#  ========================================================== Admin Profile
+def admin_image_path(instance, filename):
+    return os.path.join('Admin_profile_images', f'{instance.user.email}', filename)
+
+
+class AdminProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    profile_pic = models.ImageField(upload_to=admin_image_path, null=True, blank=True)
+    phone = models.CharField(max_length=20, null=True, blank=True)
+    nid = models.CharField(max_length=20,null=True, blank=True)
+    address1 = models.TextField(null=True,blank=True)
+    address2 = models.TextField(null=True,blank=True)
+
+    def __str__(self):
+        return str(self.id)
+
 
 # =========================================================== Customer
+def customer_image_path(instance, filename):
+    return os.path.join('Customer_profile_images', f'{instance.email}', filename)
+
 class Customer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True,blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,null=True,blank=True)
     name = models.CharField(max_length=255, null=True,blank=True)
     email = models.EmailField(max_length=255, unique=True,null=True, blank=True)
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20,null=True, blank=True)
     address = models.TextField(max_length=100,null=True, blank=True)
+    profile_pic = models.ImageField(upload_to=customer_image_path, null=True, blank=True)
     
     class Meta:
         ordering = ['-id']
     
     def __str__(self):
         return f"{self.id}"
-
-# =========================================================================== admin panel Profile
-class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    about = models.TextField(null=True, blank=True)
-    phone = models.CharField(max_length=20, null=True, blank=True)
-    address = models.CharField(max_length=255, null=True, blank=True)
-
-    class Meta:
-        ordering = ['id']
-
-    def __str__(self):
-        return self.user
 
 
 # =========================================================================== Device Categories Model
@@ -119,7 +126,7 @@ class Brand(models.Model):
 
 #============================================================================ Product Model
 def qr__image_path(instance, filename):
-    return os.path.join('Product_barcode', f'{instance.id}_{instance.product_name}', filename)
+    return os.path.join('Product_barcode', f'{instance.product_code}_{instance.product_name}', filename)
 
 
 class Product(models.Model):

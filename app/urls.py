@@ -9,7 +9,7 @@ from .views import (
     ProfileView,
     ProfilePictureChangeView,
     ProfilePictureRemoveView,
-    ProfileUpdateView,
+    AdminProfileUpdateView,
 
     DashboardView,
 
@@ -74,7 +74,7 @@ urlpatterns = [
     path('profile/<int:pk>/',ProfileView.as_view(),name='profile'),
     path('profile/<int:pk>/change-picture/',ProfilePictureChangeView.as_view(),name='profile-change-picture'),
     path('profile/<int:pk>/remove-picture/',ProfilePictureRemoveView.as_view(),name='profile-picture-remove'),
-    path('profile/<int:pk>/update-profile/',ProfileUpdateView.as_view(),name='profile-update'),
+    path('profile/<int:pk>/update-profile/',AdminProfileUpdateView.as_view(),name='profile-update'),
 
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
     

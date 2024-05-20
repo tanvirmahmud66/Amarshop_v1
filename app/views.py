@@ -29,6 +29,7 @@ from django.views.generic import (
 )
 from .models import (
     User,
+    AdminProfile,
     Customer,
     Categories, 
     SubCategory,
@@ -43,8 +44,8 @@ from .models import (
 )
 from .forms import (
     AdminCreateForm,
-    UserProfilePictureForm,
-    ProfileForm,
+    AdminUpdateForm,
+    AdminProfilePictureForm,
     CategoryForm,
     SubCategoryForm,
     BrandForm,
@@ -112,12 +113,17 @@ class ProfileView(SuperuserRequiredMixin, DetailView):
     def get_object(self, queryset=None):
         pk = self.request.user.id
         return self.model.objects.get(id=pk)
-
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        admin_profile = AdminProfile.objects.filter(user=self.request.user).first()
+        context['profile_extra'] = admin_profile
+        return context
 
 # ---------------------------------------------------------- Profile change picture View
 class ProfilePictureChangeView(SuperuserRequiredMixin,UpdateView):
-    model = User
-    form_class = UserProfilePictureForm
+    model = AdminProfile
+    form_class = AdminProfilePictureForm
     template_name = 'profile/pictureChange.html'
 
     def get_success_url(self):
@@ -126,8 +132,8 @@ class ProfilePictureChangeView(SuperuserRequiredMixin,UpdateView):
 
 # ---------------------------------------------------------- Profile Picture Remove View
 class ProfilePictureRemoveView(UpdateView):
-    model = User
-    form_class = UserProfilePictureForm
+    model = AdminProfile
+    form_class = AdminProfilePictureForm
     context_object_name = 'profile'
     template_name = 'profile/pictureRemove.html'
 
@@ -142,9 +148,9 @@ class ProfilePictureRemoveView(UpdateView):
 
 
 # ---------------------------------------------------------- Profile Update View
-class ProfileUpdateView(SuperuserRequiredMixin, UpdateView):
-    model = User
-    form_class = ProfileForm
+class AdminProfileUpdateView(SuperuserRequiredMixin, UpdateView):
+    model = AdminProfile
+    form_class = AdminUpdateForm
     template_name = 'profile/profileUpdate.html'
 
     def get_success_url(self):
@@ -193,6 +199,7 @@ class DashboardView(SuperuserRequiredMixin, TemplateView):
                 context['top_sale'] = sorted(top_sale[:5], key=lambda x: list(x.values())[0], reverse=True)[:5]
 
         # ------------- Stock alert
+        stock_alert_product = []
         for each in products:
             stock_alert_product = products.filter(quantity__lt=each.stock_alert)
         context['stock_alert'] = stock_alert_product

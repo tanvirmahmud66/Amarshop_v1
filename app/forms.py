@@ -3,8 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from multiupload.fields import MultiFileField
 from .models import (
     User,
+    AdminProfile,
     Customer,
-    Profile,
     Categories,
     SubCategory,
     Brand, 
@@ -36,8 +36,8 @@ class AdminCreateForm(UserCreationForm):
         
         if commit:
             user.save()
-            profile = Profile.objects.create(user=user)
-            profile.save()
+            admin_profile = AdminProfile.objects.create(user=user)
+            admin_profile.save()
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
@@ -47,35 +47,20 @@ class AdminCreateForm(UserCreationForm):
         user.save(using=self._db)  # Ensure the proper database is used
         return user
 
-# # ------------------------------------------------- customer create form
-# class CustomerCreateForm(UserCreationForm):
-#     class Meta:
-#         model = User
-#         fields = ('name', 'email', 'phone','address')
-
-#     def save(self, commit=True):
-#         user = super().save()
-#         if commit:
-#             user.save()
-#         return user
 
 # -------------------------------------- Profile Picture Form
-class UserProfilePictureForm(forms.ModelForm):
+class AdminProfilePictureForm(forms.ModelForm):
     class Meta:
-        model = User
+        model = AdminProfile
         fields = ['profile_pic']
 
 
 # -------------------------------------- Profile Picture Form
-class UserUpdateForm(forms.ModelForm):
+class AdminUpdateForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ['first_name','last_name','email']
+        model = AdminProfile
+        fields = ['phone','nid','address1','address2']
 
-class ProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['about','phone','address']
 
 
 # -------------------------------------- Category Form

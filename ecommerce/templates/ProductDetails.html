@@ -1,0 +1,108 @@
+{%extends 'EcomLayout.html'%}
+{% load static %}
+
+{%block title%} {{product.product_name}} | Amarshop{%endblock title%}
+
+{%block link%}
+    <link rel="stylesheet" href="{%static 'css/product_details.css'%}">
+{%endblock link%}
+
+{%block ecom%}
+   
+
+<div class="container p-0 min-height">
+    
+    <!-- ------------------------------------Product Details Section -->
+    <div class="pt-2">
+        <!-- content -->
+        <div class="row mt-5">
+            <div class="col d-flex justify-content-center">
+                <div>
+                    {%if images.0.image%}
+                    <img src="{{ images.0.image.url }}" height="450" alt="Display Images">
+                    {%else%}
+                    <img src="{%static 'images/no_product_image.png' %}" height="450" alt="No product Image"/>
+                    {%endif%}
+                    <div class="overflow-scroll">
+                        {%for image in images%}
+                            <img src="{{image.image.url}}" width="60" class="border" alt="images"/>
+                        {%endfor%}
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="w-70 h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="badge text-bg-light text-black border mb-3">{{product.brand}}</div>
+                        <h3 class="">{{product.product_name}}</h3>
+                        <div class="custom-btn mb-2 me-1">
+                            <div class="d-flex align-items-center">
+                                <div>Price: <span class="ms-1 fw-bolder">{{product.price|floatformat:"0"}}</span></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ms-1" height="20px" widht="20px">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 7.5.415-.207a.75.75 0 0 1 1.085.67V10.5m0 0h6m-6 0h-1.5m1.5 0v5.438c0 .354.161.697.473.865a3.751 3.751 0 0 0 5.452-2.553c.083-.409-.263-.75-.68-.75h-.745M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                            </div> 
+                        </div>
+                        <div class="custom-btn mb-2 me-1">{{product.category}}</div>
+                        <div class="custom-btn mb-2 me-1">{{product.subcategory}}</div>
+                        <div class="custom-btn mb-2 me-1">Status: <span class="text-success fw-bold">In Stock.</span></div>
+                    </div>
+                    <div>
+                        <div>
+                            Variant Available
+                        </div>
+                        <div>
+                            Delivery charge free
+                        </div>
+                    </div>
+                    <div>
+                        <div class="qty-container mb-5">
+                            <button class="qty-btn-minus btn-danger btn-rounded mr-1" type="button" id="minus">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="25px" width="25px">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+                                </svg>  
+                            </button>
+                            <input type="text" name="qty" class="input-qty input-rounded" id="q-input"/>
+                            <button class="qty-btn-plus btn-success btn-rounded ml-1" type="button" id="plus">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="25px" width="25px">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                </svg>                                      
+                            </button>
+                        </div>        
+                        <div class="w-100 d-flex">
+                            <button data-product="{{product.id}}" data-action="add" class="update-cart mt-2 mb-2 cart-button ps-4 pe-4 w-100 me-2" id="cart-dp">
+                                <span class="circle1"></span>
+                                <span class="circle2"></span>
+                                <span class="circle3"></span>
+                                <span class="circle4"></span>
+                                <span class="circle5"></span>
+                                <span class="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" height="25px" width="25px">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                                    </svg>                                      
+                                    Cart
+                                </span>    
+                            </button>
+                            <button class="mt-2 mb-2 cart-button ps-4 pe-4 w-100">
+                                <span class="circle1"></span>
+                                <span class="circle2"></span>
+                                <span class="circle3"></span>
+                                <span class="circle4"></span>
+                                <span class="circle5"></span>
+                                <span class="">
+                                    Buy Now
+                                </span>    
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+{%endblock ecom%}
